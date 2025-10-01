@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artsy Activity</title>
+  <link rel="stylesheet" href="../styles/style.css" />
+  <style>
+    .terminal-footer {
+      padding: 5px 20px;
+      font-family: 'Courier New', monospace;
+      color: #0f0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .terminal-footer:hover {
+      text-decoration: underline;
+    }
+
+    .activity-line {
+      color: #0f0;
+      margin-bottom: 0.5em;
+    }
+
+    .timestamp {
+      color: #888;
+      font-size: 0.9em;
+      margin-right: 10px;
+    }
+
+    .event-text {
+      display: inline;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <div class="terminal-header">
+      <span class="terminal-title">artsy.activity</span>
+      <div class="window-controls">
+        <button class="window-btn">–</button>
+        <button class="window-btn">□</button>
+        <button class="window-btn">×</button>
+      </div>
+    </div>
+
+    <pre id="screen"></pre>
+
+    <div class="terminal-footer" onclick="window.location.href='index.html'">
+      ← back to artsy.terminal
+    </div>
+  </div>
+
+  <script>
+    const screen = document.getElementById('screen');
+
+    // Sample activity events
+    const activities = [
+      { time: '10:00', text: 'Initialized the brush engine.' },
+      { time: '10:05', text: 'Generated first sketch.' },
+      { time: '10:15', text: 'Saved masterpiece #001 to gallery.' },
+      { time: '10:30', text: 'Analyzed color palette trends.' },
+      { time: '10:45', text: 'Started collaborative art session.' }
+    ];
+
+    // Typing settings
+    let speed = 2; // very fast typing
+    let pauseBetweenLines = 50;
+
+    let idx = 0;
+    let charIdx = 0;
+    let currentLineNode = null;
+
+    function typeNextChar() {
+      if (idx >= activities.length) return;
+
+      const line = activities[idx];
+      if (!currentLineNode) {
+        currentLineNode = document.createElement('div');
+        currentLineNode.className = 'activity-line';
+
+        const timestamp = document.createElement('span');
+        timestamp.className = 'timestamp';
+        timestamp.textContent = `[${line.time}] `;
+        currentLineNode.appendChild(timestamp);
+
+        const eventText = document.createElement('span');
+        eventText.className = 'event-text';
+        currentLineNode.appendChild(eventText);
+
+        screen.appendChild(currentLineNode);
+        screen.scrollTop = screen.scrollHeight;
+      }
+
+      const eventTextSpan = currentLineNode.querySelector('.event-text');
+      if (charIdx < line.text.length) {
+        eventTextSpan.textContent += line.text[charIdx];
+        charIdx++;
+        screen.scrollTop = screen.scrollHeight;
+        setTimeout(typeNextChar, speed);
+      } else {
+        // Finished current line
+        idx++;
+        charIdx = 0;
+        currentLineNode = null;
+        setTimeout(typeNextChar, pauseBetweenLines);
+      }
+    }
+
+    window.addEventListener('load', () => {
+      setTimeout(typeNextChar, 300);
+    });
+  </script>
+</body>
+</html>

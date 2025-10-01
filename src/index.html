@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VangoAI — Terminal</title>
+  <link rel="stylesheet" href="../styles/style.css">
+  <style>
+    .terminal-footer {
+      padding: 5px 20px;
+      font-family: 'Courier New', monospace;
+      color: #0f0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .terminal-footer:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <div class="terminal-header">
+      <span class="terminal-title">artsy.terminal</span>
+      <div class="window-controls">
+        <button class="window-btn">–</button>
+        <button class="window-btn">□</button>
+        <button class="window-btn">×</button>
+      </div>
+    </div>
+    <pre id="screen"></pre>
+    <!-- Footer link -->
+    <div class="terminal-footer" id="activityLink">sudo-m activity.log</div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Link to activity.html
+    document.getElementById('activityLink').addEventListener('click', () => {
+      window.location.href = 'activity.html';
+    });
+  </script>
+</body>
+</html>

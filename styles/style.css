@@ -1,0 +1,95 @@
+/* You already have this */
+body {
+  background: #fff;
+  color: #000;
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.terminal {
+  width: 95%;
+  max-width: 1000px;
+  max-height: 85vh;
+  padding: 32px 22px 22px 22px; /* increased top padding for header space */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  overflow: auto;
+  position: relative;
+  background: #fff;
+}
+
+/* Updated terminal-header */
+.terminal-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 32px;
+  background-color: #f3f3f3;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+/* Title styling */
+.terminal-title {
+  font-size: 13px;
+  font-weight: bold;
+  color: #555;
+}
+
+/* Fake window controls */
+.window-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.window-btn {
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background-color: #bbb;
+  cursor: default;
+  padding: 0;
+}
+
+.window-btn:nth-child(1) {
+  background-color: #fdbc40; /* yellow */
+}
+
+.window-btn:nth-child(2) {
+  background-color: #34c84a; /* green */
+}
+
+.window-btn:nth-child(3) {
+  background-color: #fc605c; /* red */
+}
+
+/* Prevent button interaction */
+.window-btn:hover {
+  opacity: 0.8;
+}
+
+/* Pre text */
+pre {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  white-space: pre-wrap;
+}
+
+.ascii {
+  font-family: monospace;
+  white-space: pre;
+}

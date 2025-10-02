@@ -12,10 +12,17 @@
       color: #0f0;
       cursor: pointer;
       user-select: none;
+      display: inline-block;
     }
 
     .terminal-footer:hover {
       text-decoration: underline;
+    }
+
+    .terminal-footer-container {
+      display: flex;
+      gap: 20px;
+      padding: 10px 20px;
     }
   </style>
 </head>
@@ -30,8 +37,12 @@
       </div>
     </div>
     <pre id="screen"></pre>
-    <!-- Footer link -->
-    <div class="terminal-footer" id="activityLink">sudo-m activity.log</div>
+
+    <!-- Footer links -->
+    <div class="terminal-footer-container">
+      <div class="terminal-footer" id="activityLink">sudo-m activity.log</div>
+      <div class="terminal-footer" id="roadmapLink">sudo-m artsy.roadmap</div>
+    </div>
   </div>
 
   <script src="script.js"></script>
@@ -40,6 +51,12 @@
     document.getElementById('activityLink').addEventListener('click', () => {
       window.location.href = 'activity.html';
     });
+
+    // Link to roadmap.html
+    document.getElementById('roadmapLink').addEventListener('click', () => {
+      window.location.href = 'roadmap.html';
+    });
   </script>
 </body>
 </html>
+

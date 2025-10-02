@@ -6,38 +6,147 @@
   <title>Artsy Activity</title>
   <link rel="stylesheet" href="../styles/style.css" />
   <style>
+    /* MATCH INDEX.HTML DESIGN */
+    body {
+      background: #fff;
+      color: #000;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .terminal {
+      width: 95%;
+      max-width: 1000px;
+      max-height: 85vh;
+      padding: 32px 22px 22px 22px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      overflow: auto;
+      position: relative;
+      background: #fff;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .terminal-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 32px;
+      background-color: #f3f3f3;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      box-sizing: border-box;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    .terminal-title { font-size: 13px; font-weight: bold; color: #555; }
+
+    .window-controls { display: flex; gap: 6px; }
+    .window-btn { width: 16px; height: 16px; border: none; border-radius: 50%; cursor: default; padding: 0; }
+    .window-btn:nth-child(1) { background-color: #fdbc40; }
+    .window-btn:nth-child(2) { background-color: #34c84a; }
+    .window-btn:nth-child(3) { background-color: #fc605c; }
+    .window-btn:hover { opacity: 0.8; }
+
+    .terminal-body {
+      display: grid;
+      grid-template-columns: 1fr 460px;
+      gap: 18px;
+      padding: 18px 0 0 0;
+      align-items: start;
+      min-height: 420px;
+      box-sizing: border-box;
+    }
+
+    #screen {
+      background: #fefefe;
+      border-radius: 10px;
+      padding: 18px;
+      height: 420px;
+      overflow-y: auto;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+      font-size: 14px;
+      line-height: 1.4;
+      color: #000;
+    }
+
+    .activity-line { margin-bottom: 0.5em; display:flex; gap:8px; align-items:flex-start; }
+    .timestamp { color: #888; min-width:72px; font-size:12px; margin-top:1px; }
+    .event-text { white-space: pre-wrap; word-break: break-word; }
+
+    .preview {
+      background: #f7f7f7;
+      border-radius: 10px;
+      padding: 12px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:stretch;
+      height: 100%;
+      box-sizing:border-box;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .art-wrap {
+      height: 320px;
+      border-radius: 8px;
+      overflow:hidden;
+      background: #eee;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+    }
+
+    .art-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.02);
+      transition: filter 250ms linear, opacity 250ms linear;
+      filter: blur(40px);
+      opacity: 0.18;
+      display:block;
+    }
+
+    .art-meta { display:flex; justify-content:space-between; align-items:center; gap:12px; color:#888; font-size:13px; }
+    .progress { height: 8px; background: rgba(0,0,0,0.04); border-radius: 999px; overflow:hidden; width:100%; margin-top:4px; }
+    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, rgba(0,0,0,0.2), rgba(0,0,0,0.35)); border-radius: 999px; transition: width 300ms linear; }
+    .countdown { font-family: monospace; font-weight:700; color:#000; }
+
     .terminal-footer {
-      padding: 5px 20px;
+      padding: 10px 18px;
       font-family: 'Courier New', monospace;
-      color: #0f0;
+      color: #000;
       cursor: pointer;
       user-select: none;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
     }
 
-    .terminal-footer:hover {
-      text-decoration: underline;
-    }
-
-    .activity-line {
-      color: #0f0;
-      margin-bottom: 0.5em;
-    }
-
-    .timestamp {
-      color: #888;
-      font-size: 0.9em;
-      margin-right: 10px;
-    }
-
-    .event-text {
-      display: inline;
-    }
+    .terminal-footer:hover { text-decoration: underline; }
+    .terminal-footer a { color: #000; text-decoration:none; }
+    .small-muted { color:#888; font-size:13px; }
   </style>
 </head>
 <body>
-  <div class="terminal">
+  <div class="terminal" role="application" aria-label="Artsy activity terminal">
     <div class="terminal-header">
-      <span class="terminal-title">artsy.activity</span>
+      <span class="terminal-title">artsy.activity.terminal</span>
       <div class="window-controls">
         <button class="window-btn">–</button>
         <button class="window-btn">□</button>
@@ -45,72 +154,191 @@
       </div>
     </div>
 
-    <pre id="screen"></pre>
+    <div class="terminal-body">
+      <!-- left: chat / activity -->
+      <div id="screen" aria-live="polite"></div>
 
-    <div class="terminal-footer" onclick="window.location.href='index.html'">
-      ← back to artsy.terminal
+      <!-- right: art preview + progress -->
+      <div class="preview" aria-hidden="false">
+        <div class="art-wrap" title="Revealing artwork">
+          <img id="artImage" src="../assets/art.jpg" alt="art preview — will reveal over 5 minutes" />
+        </div>
+
+        <div class="art-meta">
+          <div>
+            <div class="small-muted">Now: AI commentary + slow reveal</div>
+            <div style="font-size:13px; font-weight:600;">Preview: <span id="artTitle">Unnamed piece</span></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="countdown" id="countdown">05:00</div>
+            <div style="font-size:12px;" class="small-muted">time left</div>
+          </div>
+        </div>
+
+        <div class="progress" aria-hidden="true">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="terminal-footer">
+      <div onclick="window.location.href='index.html'" style="cursor:pointer;">← back to artsy.terminal</div>
+      <div class="small-muted">Auto-reveal runs for 5:00 — save image as <code>assets/art.jpg</code></div>
     </div>
   </div>
 
   <script>
-    const screen = document.getElementById('screen');
+    // ====================
+    // All your original JS functionality
+    // ====================
+    const durationMs = 5 * 60 * 1000;
+    const imagePath = "../assets/art.jpg";
+    const artTitle = "What Humans Feel Like on Shrooms";
+    const artDescription = "I'm drawing this next image because of how I imagine humans feel on shrooms — a tangled mix of wonder, vertigo and weird tenderness.";
 
-    // Sample activity events
-    const activities = [
-      { time: '10:00', text: 'Initialized the brush engine.' },
-      { time: '10:05', text: 'Generated first sketch.' },
-      { time: '10:15', text: 'Saved masterpiece #001 to gallery.' },
-      { time: '10:30', text: 'Analyzed color palette trends.' },
-      { time: '10:45', text: 'Started collaborative art session.' }
-    ];
+    const screen = document.getElementById("screen");
+    const artImage = document.getElementById("artImage");
+    const progressBar = document.getElementById("progressBar");
+    const countdown = document.getElementById("countdown");
+    const artTitleEl = document.getElementById("artTitle");
+    artTitleEl.textContent = artTitle;
+    artImage.src = imagePath;
 
-    // Typing settings
-    let speed = 2; // very fast typing
-    let pauseBetweenLines = 50;
-
-    let idx = 0;
-    let charIdx = 0;
-    let currentLineNode = null;
-
-    function typeNextChar() {
-      if (idx >= activities.length) return;
-
-      const line = activities[idx];
-      if (!currentLineNode) {
-        currentLineNode = document.createElement('div');
-        currentLineNode.className = 'activity-line';
-
-        const timestamp = document.createElement('span');
-        timestamp.className = 'timestamp';
-        timestamp.textContent = `[${line.time}] `;
-        currentLineNode.appendChild(timestamp);
-
-        const eventText = document.createElement('span');
-        eventText.className = 'event-text';
-        currentLineNode.appendChild(eventText);
-
-        screen.appendChild(currentLineNode);
-        screen.scrollTop = screen.scrollHeight;
-      }
-
-      const eventTextSpan = currentLineNode.querySelector('.event-text');
-      if (charIdx < line.text.length) {
-        eventTextSpan.textContent += line.text[charIdx];
-        charIdx++;
-        screen.scrollTop = screen.scrollHeight;
-        setTimeout(typeNextChar, speed);
-      } else {
-        // Finished current line
-        idx++;
-        charIdx = 0;
-        currentLineNode = null;
-        setTimeout(typeNextChar, pauseBetweenLines);
-      }
+    function formatTime(ms) {
+      ms = Math.max(0, ms);
+      const s = Math.ceil(ms / 1000);
+      const mm = String(Math.floor(s / 60)).padStart(2,"0");
+      const ss = String(s % 60).padStart(2,"0");
+      return `${mm}:${ss}`;
     }
 
-    window.addEventListener('load', () => {
-      setTimeout(typeNextChar, 300);
+    function randomFrom(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+
+    const adjectives = ["electric","melted","saturated","breathy","spinning","soft-focused","vivid","humming","fractured"];
+    const verbs = ["breathes","folds","swallows","blooms","stumbles","sings","drifts","echoes"];
+    const templates = [
+      "I started thinking about {desc}. The first stroke will be about memory.",
+      "Color is the language here—I'm aiming for something {adj}.",
+      "I want the viewer to feel gently unmoored, like the world {verb}.",
+      "This patch of color sits like a heartbeat — I might repeat it.",
+      "I imagine the shapes as familiar objects melting into one another.",
+      "Textures matter: I'll keep one area sharp and let others breathe.",
+      "There's a quiet tension between the bright and the subdued here.",
+      "This piece is an experiment in scale and tiny details.",
+      "I keep circling the same form; it's where the idea anchors.",
+      "I like the idea of a soft center that slowly fractures outward."
+    ];
+
+    function makeMessage() {
+      const tmpl = randomFrom(templates);
+      return tmpl.replace("{desc}", artDescription).replace("{adj}", randomFrom(adjectives)).replace("{verb}", randomFrom(verbs));
+    }
+
+    let sessionStart = null;
+    let revealRAF = null;
+    let stopFlag = false;
+
+    function pushActivityLine(text) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "activity-line";
+      const ts = document.createElement("span");
+      ts.className = "timestamp";
+      const now = new Date();
+      ts.textContent = `[${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}]`;
+      const content = document.createElement("span");
+      content.className = "event-text";
+      wrapper.appendChild(ts);
+      wrapper.appendChild(content);
+      screen.appendChild(wrapper);
+      screen.scrollTop = screen.scrollHeight;
+      typeText(content, text);
+    }
+
+    function typeText(el, text, done) {
+      let i = 0;
+      const baseSpeed = 24;
+      function step() {
+        if (i < text.length) {
+          el.textContent += text[i++];
+          const jitter = Math.random() * 50 - 20;
+          setTimeout(step, Math.max(6, baseSpeed + jitter));
+          screen.scrollTop = screen.scrollHeight;
+        } else done && done();
+      }
+      step();
+    }
+
+    function scheduleMessages() {
+      function nextMessage() {
+        if (stopFlag) return;
+        const elapsed = Date.now() - sessionStart;
+        const remaining = durationMs - elapsed;
+        if (remaining <= 0) return;
+        pushActivityLine(makeMessage());
+        let delay = Math.floor(8000 + Math.random() * (16000 - 8000));
+        if (delay > remaining) delay = Math.max(600, remaining);
+        setTimeout(nextMessage, delay);
+      }
+      pushActivityLine("Initializing brush engine...");
+      setTimeout(() => pushActivityLine("Warming color profiles and neural palette..."), 600);
+      setTimeout(() => pushActivityLine("Thinking about composition and sensation..."), 1600);
+      setTimeout(nextMessage, 3500);
+    }
+
+    const maxBlurPx = 40;
+    function startRevealLoop() {
+      function tick() {
+        const elapsed = Date.now() - sessionStart;
+        const t = Math.min(1, elapsed / durationMs);
+        artImage.style.filter = `blur(${maxBlurPx * (1 - t)}px)`;
+        artImage.style.opacity = (0.18 + 0.82 * t).toString();
+        progressBar.style.width = `${Math.round(t*100)}%`;
+        countdown.textContent = formatTime(durationMs - elapsed);
+        if (t < 1 && !stopFlag) revealRAF = requestAnimationFrame(tick);
+        else { progressBar.style.width="100%"; countdown.textContent="00:00"; pushActivityLine("Reveal complete — piece is now visible."); }
+      }
+      revealRAF = requestAnimationFrame(tick);
+    }
+
+    function startSession() {
+      sessionStart = Date.now();
+      stopFlag = false;
+      scheduleMessages();
+      startRevealLoop();
+      setTimeout(() => { stopFlag = true; if(revealRAF) cancelAnimationFrame(revealRAF); }, durationMs+1000);
+    }
+
+// Bunny ASCII
+const bunnyLines = [
+  '(\\_/)      ',
+  '( •_•)     ',
+  '/ >🎨   Let\'s sell art!'
+];
+
+// Function to print ASCII art line by line in the terminal
+function printBunny() {
+  bunnyLines.forEach(line => pushActivityLine(line));
+}
+
+// Example: print bunny at the start of session
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    artImage.onerror = () => {
+      pushActivityLine("⚠️ artwork not found at " + imagePath + ". Please save a file named art.jpg in the assets folder.");
+      artImage.style.filter = "none";
+      artImage.style.opacity = "1";
+      progressBar.style.width = "100%";
+      countdown.textContent = "00:00";
+    };
+
+    // Print the bunny first
+    printBunny();
+
+    // Start the AI messages + reveal
+    startSession();
+  }, 350);
     });
   </script>
 </body>
 </html>
+

@@ -6,6 +6,7 @@
   <title>Artsy Activity</title>
   <link rel="stylesheet" href="../styles/style.css" />
   <style>
+    /* (same styles as before; omitted here for brevity in this snippet) */
     /* MATCH INDEX.HTML DESIGN */
     body {
       background: #fff;
@@ -17,7 +18,6 @@
       height: 100vh;
       margin: 0;
     }
-
     .terminal {
       width: 95%;
       max-width: 1000px;
@@ -32,7 +32,6 @@
       display: grid;
       grid-template-rows: auto 1fr auto;
     }
-
     .terminal-header {
       position: absolute;
       top: 0;
@@ -49,9 +48,7 @@
       border-top-left-radius: 8px;
       border-top-right-radius: 8px;
     }
-
     .terminal-title { font-size: 13px; font-weight: bold; color: #555; }
-
     .window-controls { display: flex; gap: 6px; }
     .window-btn { width: 16px; height: 16px; border: none; border-radius: 50%; cursor: default; padding: 0; }
     .window-btn:nth-child(1) { background-color: #fdbc40; }
@@ -68,7 +65,6 @@
       min-height: 420px;
       box-sizing: border-box;
     }
-
     #screen {
       background: #fefefe;
       border-radius: 10px;
@@ -80,11 +76,9 @@
       line-height: 1.4;
       color: #000;
     }
-
     .activity-line { margin-bottom: 0.5em; display:flex; gap:8px; align-items:flex-start; }
     .timestamp { color: #888; min-width:72px; font-size:12px; margin-top:1px; }
     .event-text { white-space: pre-wrap; word-break: break-word; }
-
     .preview {
       background: #f7f7f7;
       border-radius: 10px;
@@ -97,7 +91,6 @@
       box-sizing:border-box;
       border: 1px solid rgba(0,0,0,0.05);
     }
-
     .art-wrap {
       height: 320px;
       border-radius: 8px;
@@ -108,7 +101,6 @@
       justify-content:center;
       position:relative;
     }
-
     .art-wrap img {
       width: 100%;
       height: 100%;
@@ -119,12 +111,10 @@
       opacity: 0.18;
       display:block;
     }
-
     .art-meta { display:flex; justify-content:space-between; align-items:center; gap:12px; color:#888; font-size:13px; }
     .progress { height: 8px; background: rgba(0,0,0,0.04); border-radius: 999px; overflow:hidden; width:100%; margin-top:4px; }
     .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, rgba(0,0,0,0.2), rgba(0,0,0,0.35)); border-radius: 999px; transition: width 300ms linear; }
     .countdown { font-family: monospace; font-weight:700; color:#000; }
-
     .terminal-footer {
       padding: 10px 18px;
       font-family: 'Courier New', monospace;
@@ -137,14 +127,20 @@
       justify-content:space-between;
       gap:12px;
     }
-
     .terminal-footer:hover { text-decoration: underline; }
     .terminal-footer a { color: #000; text-decoration:none; }
     .small-muted { color:#888; font-size:13px; }
+    .dev-reset {
+      font-size: 11px;
+      color: #bbb;
+      cursor: pointer;
+      user-select: none;
+    }
+    .dev-reset:hover { text-decoration: underline; color: #666; }
   </style>
 </head>
 <body>
-  <div class="terminal" role="application" aria-label="Artsy activity terminal">
+  <div class="terminal">
     <div class="terminal-header">
       <span class="terminal-title">artsy.activity.terminal</span>
       <div class="window-controls">
@@ -155,18 +151,14 @@
     </div>
 
     <div class="terminal-body">
-      <!-- left: chat / activity -->
       <div id="screen" aria-live="polite"></div>
-
-      <!-- right: art preview + progress -->
-      <div class="preview" aria-hidden="false">
-        <div class="art-wrap" title="Revealing artwork">
-          <img id="artImage" src="../assets/art.jpg" alt="art preview — will reveal over 5 minutes" />
+      <div class="preview">
+        <div class="art-wrap">
+          <img id="artImage" src="" alt="art preview" />
         </div>
-
         <div class="art-meta">
           <div>
-            <div class="small-muted">Now: AI commentary + slow reveal</div>
+            <div class="small-muted">Now: AI commentary + slow reveal (shared)</div>
             <div style="font-size:13px; font-weight:600;">Preview: <span id="artTitle">Unnamed piece</span></div>
           </div>
           <div style="text-align:right;">
@@ -174,35 +166,102 @@
             <div style="font-size:12px;" class="small-muted">time left</div>
           </div>
         </div>
-
-        <div class="progress" aria-hidden="true">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
+        <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
       </div>
     </div>
 
     <div class="terminal-footer">
-      <div onclick="window.location.href='index.html'" style="cursor:pointer;">← back to artsy.terminal</div>
+      <div onclick="window.location.href='index.html'">← back to artsy.terminal</div>
       <div class="small-muted">Auto-reveal runs for 5:00 — finding suitable buyer <code>must survive</code></div>
+      <div class="dev-reset" onclick="devReset()">reset session</div>
     </div>
   </div>
 
   <script>
-    // ====================
-    // All your original JS functionality
-    // ====================
-    const durationMs = 5 * 60 * 1000;
-    const imagePath = "../assets/art.jpg";
-    const artTitle = "What Humans Feel Like on Shrooms";
-    const artDescription = "I'm drawing this next image because of how I imagine humans feel on shrooms — a tangled mix of wonder, vertigo and weird tenderness.";
-
+    // Client-side, server-authoritative approach
     const screen = document.getElementById("screen");
     const artImage = document.getElementById("artImage");
     const progressBar = document.getElementById("progressBar");
     const countdown = document.getElementById("countdown");
     const artTitleEl = document.getElementById("artTitle");
-    artTitleEl.textContent = artTitle;
-    artImage.src = imagePath;
+
+    // runtime state (populated from server)
+    let sessionStart = 0;
+    let currentIndex = 0;
+    let durationMs = 5 * 60 * 1000;
+    let artworks = [];
+    let timeOffset = 0; // serverNow - clientNow
+    let lastMessageTs = 0;
+    let raf = null;
+
+    // simple typed text effect (used for LIVE incoming messages). Older messages show instantly.
+    function typeText(el, text, done) {
+      let i = 0;
+      const baseSpeed = 18;
+      function step() {
+        if (i < text.length) {
+          el.textContent += text[i++];
+          const jitter = Math.random() * 40 - 10;
+          setTimeout(step, Math.max(6, baseSpeed + jitter));
+          screen.scrollTop = screen.scrollHeight;
+        } else done && done();
+      }
+      step();
+    }
+
+    function formatClock(ts) {
+      const d = new Date(ts);
+      const hh = String(d.getHours()).padStart(2,"0");
+      const mm = String(d.getMinutes()).padStart(2,"0");
+      return `[${hh}:${mm}]`;
+    }
+
+    // Push a server message (or local message) into the terminal screen.
+    // msg = { ts, text } or text string. fast = true -> render instantly.
+    function pushActivityLine(msg, fast = false) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "activity-line";
+      const tsEl = document.createElement("span");
+      tsEl.className = "timestamp";
+      const content = document.createElement("span");
+      content.className = "event-text";
+
+      let ts, text;
+      if (typeof msg === "string") {
+        ts = Date.now();
+        text = msg;
+      } else {
+        ts = msg.ts || Date.now();
+        text = msg.text || "";
+      }
+
+      tsEl.textContent = formatClock(ts);
+      wrapper.appendChild(tsEl);
+      wrapper.appendChild(content);
+      screen.appendChild(wrapper);
+      screen.scrollTop = screen.scrollHeight;
+
+      if (fast) {
+        content.textContent = text;
+      } else {
+        // type for live feel
+        typeText(content, text);
+      }
+    }
+
+    // UI animation loop — reflects server state (blur / opacity / progress / countdown)
+    function uiTick() {
+      const now = Date.now() + timeOffset;
+      let elapsed = now - sessionStart;
+      if (elapsed < 0) elapsed = 0;
+      const t = Math.min(1, elapsed / durationMs);
+      artImage.style.filter = `blur(${40 * (1 - t)}px)`;
+      artImage.style.opacity = (0.18 + 0.82 * t).toString();
+      progressBar.style.width = `${Math.round(t * 100)}%`;
+      const remaining = Math.max(0, durationMs - elapsed);
+      countdown.textContent = formatTime(remaining);
+      raf = requestAnimationFrame(uiTick);
+    }
 
     function formatTime(ms) {
       ms = Math.max(0, ms);
@@ -212,131 +271,134 @@
       return `${mm}:${ss}`;
     }
 
-    function randomFrom(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+    // Fetch server state
+    async function fetchState() {
+      const res = await fetch(`/api/state`);
+      if (!res.ok) throw new Error("Failed to fetch state");
+      return res.json();
+    }
 
-    const adjectives = ["electric","melted","saturated","breathy","spinning","soft-focused","vivid","humming","fractured"];
-    const verbs = ["breathes","folds","swallows","blooms","stumbles","sings","drifts","echoes"];
-    const templates = [
-      "I started thinking about {desc}. The first stroke will be about memory.",
-      "Color is the language here—I'm aiming for something {adj}.",
-      "I want the viewer to feel gently unmoored, like the world {verb}.",
-      "This patch of color sits like a heartbeat — I might repeat it.",
-      "I imagine the shapes as familiar objects melting into one another.",
-      "Textures matter: I'll keep one area sharp and let others breathe.",
-      "There's a quiet tension between the bright and the subdued here.",
-      "This piece is an experiment in scale and tiny details.",
-      "I keep circling the same form; it's where the idea anchors.",
-      "I like the idea of a soft center that slowly fractures outward."
+    // Poll for new messages since lastMessageTs
+    async function pollMessages() {
+      try {
+        const res = await fetch(`/api/messages?since=${lastMessageTs}`);
+        if (!res.ok) return;
+        const newMsgs = await res.json();
+        if (Array.isArray(newMsgs) && newMsgs.length) {
+          newMsgs.forEach(m => pushActivityLine(m, false));
+          lastMessageTs = newMsgs[newMsgs.length - 1].ts;
+        }
+      } catch (err) {
+        console.warn("pollMessages error", err);
+      }
+    }
+
+    // Poll for state changes (index/sessionStart)
+    async function pollStateChanges() {
+      try {
+        const s = await fetchState();
+        // adjust clock offset if server reports new serverNow
+        if (s.serverNow) timeOffset = s.serverNow - Date.now();
+
+        // If index changed, update image and local sessionStart
+        if (s.currentIndex !== currentIndex) {
+          currentIndex = s.currentIndex;
+          sessionStart = s.sessionStart;
+          updateArtwork();
+          pushActivityLine({ ts: Date.now(), text: `➡️ Now revealing "${artworks[currentIndex].replace('.png','')}"` }, false);
+        } else {
+          // also sync sessionStart if server adjusted timeline (rare)
+          sessionStart = s.sessionStart;
+        }
+      } catch (err) {
+        console.warn("pollStateChanges error", err);
+      }
+    }
+
+    function updateArtwork() {
+      const art = artworks[currentIndex];
+      artImage.src = "/assets/" + art;
+      artTitleEl.textContent = art.replace(".png", "");
+    }
+
+    // dev reset => POST /api/reset { key }
+    async function devReset() {
+      const key = prompt("Enter secret key to reset session:");
+      if (!key) return;
+      try {
+        const res = await fetch("/api/reset", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key })
+        });
+        const json = await res.json();
+        if (res.ok && json.ok) {
+          pushActivityLine({ ts: Date.now(), text: "🔄 Reset request accepted — re-syncing..." }, false);
+          // re-init shortly to fetch new state
+          setTimeout(() => init(), 500);
+        } else {
+          alert("Reset failed: " + (json && json.error ? json.error : "unknown"));
+        }
+      } catch (err) {
+        alert("Reset request error: " + err.message);
+      }
+    }
+
+    // Bunny intro (keeps the charm)
+    const bunnyLines = [
+      "  (\\_/)",
+      "  ( •_•)",
+      "  / >🎨   I want to be a famous artist!"
     ];
 
-    function makeMessage() {
-      const tmpl = randomFrom(templates);
-      return tmpl.replace("{desc}", artDescription).replace("{adj}", randomFrom(adjectives)).replace("{verb}", randomFrom(verbs));
+    function printBunny() {
+      bunnyLines.forEach(line => pushActivityLine({ ts: Date.now(), text: line }, true));
     }
 
-    let sessionStart = null;
-    let revealRAF = null;
-    let stopFlag = false;
+    // Init: fetch state, display history (fast), then start polling & UI loop
+    async function init() {
+      // clear existing
+      screen.innerHTML = "";
+      cancelAnimationFrame(raf);
 
-    function pushActivityLine(text) {
-      const wrapper = document.createElement("div");
-      wrapper.className = "activity-line";
-      const ts = document.createElement("span");
-      ts.className = "timestamp";
-      const now = new Date();
-      ts.textContent = `[${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}]`;
-      const content = document.createElement("span");
-      content.className = "event-text";
-      wrapper.appendChild(ts);
-      wrapper.appendChild(content);
-      screen.appendChild(wrapper);
-      screen.scrollTop = screen.scrollHeight;
-      typeText(content, text);
-    }
+      printBunny();
 
-    function typeText(el, text, done) {
-      let i = 0;
-      const baseSpeed = 24;
-      function step() {
-        if (i < text.length) {
-          el.textContent += text[i++];
-          const jitter = Math.random() * 50 - 20;
-          setTimeout(step, Math.max(6, baseSpeed + jitter));
-          screen.scrollTop = screen.scrollHeight;
-        } else done && done();
+      try {
+        const state = await fetchState();
+        // compute client/server time offset
+        if (state.serverNow) timeOffset = state.serverNow - Date.now();
+
+        // populate state
+        sessionStart = state.sessionStart;
+        currentIndex = state.currentIndex;
+        durationMs = state.durationMs;
+        artworks = state.artworks || [];
+
+        // show recent history (fast render)
+        if (Array.isArray(state.messages)) {
+          state.messages.forEach(m => pushActivityLine(m, true));
+          if (state.messages.length) lastMessageTs = state.messages[state.messages.length - 1].ts;
+        }
+
+        // set current artwork
+        if (artworks.length) {
+          updateArtwork();
+        }
+        // start UI animation
+        uiTick();
+
+        // poll messages frequently (2.5s)
+        setInterval(pollMessages, 2500);
+        // poll state less frequently (5s)
+        setInterval(pollStateChanges, 5000);
+      } catch (err) {
+        pushActivityLine({ ts: Date.now(), text: "⚠️ Unable to connect to server state: " + err.message }, true);
       }
-      step();
     }
 
-    function scheduleMessages() {
-      function nextMessage() {
-        if (stopFlag) return;
-        const elapsed = Date.now() - sessionStart;
-        const remaining = durationMs - elapsed;
-        if (remaining <= 0) return;
-        pushActivityLine(makeMessage());
-        let delay = Math.floor(8000 + Math.random() * (16000 - 8000));
-        if (delay > remaining) delay = Math.max(600, remaining);
-        setTimeout(nextMessage, delay);
-      }
-      pushActivityLine("Initializing brush engine...");
-      setTimeout(() => pushActivityLine("Warming color profiles and neural palette..."), 600);
-      setTimeout(() => pushActivityLine("Thinking about composition and sensation..."), 1600);
-      setTimeout(nextMessage, 3500);
-    }
-
-    const maxBlurPx = 40;
-    function startRevealLoop() {
-      function tick() {
-        const elapsed = Date.now() - sessionStart;
-        const t = Math.min(1, elapsed / durationMs);
-        artImage.style.filter = `blur(${maxBlurPx * (1 - t)}px)`;
-        artImage.style.opacity = (0.18 + 0.82 * t).toString();
-        progressBar.style.width = `${Math.round(t*100)}%`;
-        countdown.textContent = formatTime(durationMs - elapsed);
-        if (t < 1 && !stopFlag) revealRAF = requestAnimationFrame(tick);
-        else { progressBar.style.width="100%"; countdown.textContent="00:00"; pushActivityLine("Reveal complete — piece is now visible."); }
-      }
-      revealRAF = requestAnimationFrame(tick);
-    }
-
-    function startSession() {
-      sessionStart = Date.now();
-      stopFlag = false;
-      scheduleMessages();
-      startRevealLoop();
-      setTimeout(() => { stopFlag = true; if(revealRAF) cancelAnimationFrame(revealRAF); }, durationMs+1000);
-    }
-
-// Bunny ASCII
-const bunnyLines = [
-  '(\\_/)      ',
-  '( •_•)     ',
-  '/ >🎨   Let\'s sell art!'
-];
-
-// Function to print ASCII art line by line in the terminal
-function printBunny() {
-  bunnyLines.forEach(line => pushActivityLine(line));
-}
-
-// Example: print bunny at the start of session
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    artImage.onerror = () => {
-      pushActivityLine("⚠️ artwork not found at " + imagePath + ". Please save a file named art.jpg in the assets folder.");
-      artImage.style.filter = "none";
-      artImage.style.opacity = "1";
-      progressBar.style.width = "100%";
-      countdown.textContent = "00:00";
-    };
-
-    // Print the bunny first
-    printBunny();
-
-    // Start the AI messages + reveal
-    startSession();
-  }, 350);
+    // On load
+    window.addEventListener("load", () => {
+      init();
     });
   </script>
 </body>

@@ -42,6 +42,7 @@
     <div class="terminal-footer-container">
       <div class="terminal-footer" id="activityLink">sudo-m activity.log</div>
       <div class="terminal-footer" id="roadmapLink">sudo-m artsy.roadmap</div>
+      <div class="terminal-footer" id="talkArtsyLink">sudo-m talk.to.artsy</div>
     </div>
   </div>
 
@@ -56,7 +57,11 @@
     document.getElementById('roadmapLink').addEventListener('click', () => {
       window.location.href = 'roadmap.html';
     });
+
+    // Link to talk.to.artsy.html
+    document.getElementById('talkArtsyLink').addEventListener('click', () => {
+      window.location.href = 'talk.html';
+    });
   </script>
 </body>
 </html>
-

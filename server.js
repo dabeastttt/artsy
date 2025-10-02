@@ -16,7 +16,7 @@ app.use("/styles", express.static(path.join(__dirname, "styles")));
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 
 // --- Shared reveal configuration (server authoritative) ---
-const durationMs = 5 * 60 * 1000; // 5 minutes per artwork
+const durationMs = (2 * 60 + 50) * 1000; // 2 minutes 50 seconds per artwork
 const artworks = [
   "Aurora Doll.png",
   "Baked Reindeers.png",

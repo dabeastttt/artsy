@@ -6,8 +6,7 @@
   <title>Artsy Activity</title>
   <link rel="stylesheet" href="../styles/style.css" />
   <style>
-    /* (same styles as before; omitted here for brevity in this snippet) */
-    /* MATCH INDEX.HTML DESIGN */
+    /* (same styles as before) */
     body {
       background: #fff;
       color: #000;
@@ -162,7 +161,7 @@
             <div style="font-size:13px; font-weight:600;">Preview: <span id="artTitle">Unnamed piece</span></div>
           </div>
           <div style="text-align:right;">
-            <div class="countdown" id="countdown">05:00</div>
+            <div class="countdown" id="countdown">02:50</div>
             <div style="font-size:12px;" class="small-muted">time left</div>
           </div>
         </div>
@@ -172,29 +171,26 @@
 
     <div class="terminal-footer">
       <div onclick="window.location.href='index.html'">← back to artsy.terminal</div>
-      <div class="small-muted">Auto-reveal runs for 5:00 — finding suitable buyer <code>must survive</code></div>
+      <div class="small-muted">Auto-reveal runs for 2:50 — finding suitable buyer <code>must survive</code></div>
       <div class="dev-reset" onclick="devReset()">reset session</div>
     </div>
   </div>
 
   <script>
-    // Client-side, server-authoritative approach
     const screen = document.getElementById("screen");
     const artImage = document.getElementById("artImage");
     const progressBar = document.getElementById("progressBar");
     const countdown = document.getElementById("countdown");
     const artTitleEl = document.getElementById("artTitle");
 
-    // runtime state (populated from server)
     let sessionStart = 0;
     let currentIndex = 0;
-    let durationMs = 5 * 60 * 1000;
+    let durationMs = 170000; // 2 min 50 sec
     let artworks = [];
-    let timeOffset = 0; // serverNow - clientNow
+    let timeOffset = 0;
     let lastMessageTs = 0;
     let raf = null;
 
-    // simple typed text effect (used for LIVE incoming messages). Older messages show instantly.
     function typeText(el, text, done) {
       let i = 0;
       const baseSpeed = 18;
@@ -216,8 +212,6 @@
       return `[${hh}:${mm}]`;
     }
 
-    // Push a server message (or local message) into the terminal screen.
-    // msg = { ts, text } or text string. fast = true -> render instantly.
     function pushActivityLine(msg, fast = false) {
       const wrapper = document.createElement("div");
       wrapper.className = "activity-line";
@@ -244,12 +238,10 @@
       if (fast) {
         content.textContent = text;
       } else {
-        // type for live feel
         typeText(content, text);
       }
     }
 
-    // UI animation loop — reflects server state (blur / opacity / progress / countdown)
     function uiTick() {
       const now = Date.now() + timeOffset;
       let elapsed = now - sessionStart;
@@ -271,14 +263,12 @@
       return `${mm}:${ss}`;
     }
 
-    // Fetch server state
     async function fetchState() {
       const res = await fetch(`/api/state`);
       if (!res.ok) throw new Error("Failed to fetch state");
       return res.json();
     }
 
-    // Poll for new messages since lastMessageTs
     async function pollMessages() {
       try {
         const res = await fetch(`/api/messages?since=${lastMessageTs}`);
@@ -293,21 +283,16 @@
       }
     }
 
-    // Poll for state changes (index/sessionStart)
     async function pollStateChanges() {
       try {
         const s = await fetchState();
-        // adjust clock offset if server reports new serverNow
         if (s.serverNow) timeOffset = s.serverNow - Date.now();
-
-        // If index changed, update image and local sessionStart
         if (s.currentIndex !== currentIndex) {
           currentIndex = s.currentIndex;
           sessionStart = s.sessionStart;
           updateArtwork();
           pushActivityLine({ ts: Date.now(), text: `➡️ Now revealing "${artworks[currentIndex].replace('.png','')}"` }, false);
         } else {
-          // also sync sessionStart if server adjusted timeline (rare)
           sessionStart = s.sessionStart;
         }
       } catch (err) {
@@ -321,7 +306,6 @@
       artTitleEl.textContent = art.replace(".png", "");
     }
 
-    // dev reset => POST /api/reset { key }
     async function devReset() {
       const key = prompt("Enter secret key to reset session:");
       if (!key) return;
@@ -334,7 +318,6 @@
         const json = await res.json();
         if (res.ok && json.ok) {
           pushActivityLine({ ts: Date.now(), text: "🔄 Reset request accepted — re-syncing..." }, false);
-          // re-init shortly to fetch new state
           setTimeout(() => init(), 500);
         } else {
           alert("Reset failed: " + (json && json.error ? json.error : "unknown"));
@@ -344,7 +327,6 @@
       }
     }
 
-    // Bunny intro (keeps the charm)
     const bunnyLines = [
       "  (\\_/)",
       "  ( •_•)",
@@ -355,9 +337,7 @@
       bunnyLines.forEach(line => pushActivityLine({ ts: Date.now(), text: line }, true));
     }
 
-    // Init: fetch state, display history (fast), then start polling & UI loop
     async function init() {
-      // clear existing
       screen.innerHTML = "";
       cancelAnimationFrame(raf);
 
@@ -365,38 +345,30 @@
 
       try {
         const state = await fetchState();
-        // compute client/server time offset
         if (state.serverNow) timeOffset = state.serverNow - Date.now();
 
-        // populate state
         sessionStart = state.sessionStart;
         currentIndex = state.currentIndex;
-        durationMs = state.durationMs;
+        durationMs = state.durationMs || 170000;
         artworks = state.artworks || [];
 
-        // show recent history (fast render)
         if (Array.isArray(state.messages)) {
           state.messages.forEach(m => pushActivityLine(m, true));
           if (state.messages.length) lastMessageTs = state.messages[state.messages.length - 1].ts;
         }
 
-        // set current artwork
         if (artworks.length) {
           updateArtwork();
         }
-        // start UI animation
         uiTick();
 
-        // poll messages frequently (2.5s)
         setInterval(pollMessages, 2500);
-        // poll state less frequently (5s)
         setInterval(pollStateChanges, 5000);
       } catch (err) {
         pushActivityLine({ ts: Date.now(), text: "⚠️ Unable to connect to server state: " + err.message }, true);
       }
     }
 
-    // On load
     window.addEventListener("load", () => {
       init();
     });

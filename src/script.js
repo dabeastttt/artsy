@@ -8,68 +8,61 @@ const bootLines = [
   '>> Boot sequence complete.'
 ];
 
-// ASCII box lines
-const asciiBoxLines = [
-  '##############################################################',
-  '#                                                            #',
-  '#                                                            #',
-  '#                                                            #',
-  '#      _    ____ _____ ______   __                           #',
-  '#     / \\  |  _ \\_   _/ ___\\ \\ / /                           #',
-  '#    / _ \\ | |_) || | \\___ \\\\ V /                            #',
-  '#   / ___ \\|  _ < | |  ___) || |                             #',
-  '#  /_/   \\_\\_| \\_\\|_| |____/ |_|                             #',
-  '#                                                            #',
-  '#                                                            #',
-  '#                                                            #',
-  '#                                                            #',
-  '#                        CA:                                 #',
-  '##############################################################'
-];
-
 // Bunny ASCII
 const bunnyLines = [
   '(\\_/)      ',
   '( •_•)     ',
-  '/ >🎨   Let\'s sell art!'
+  '/ >🎨   I want to be a famous artist!'
 ];
 
 // Manifesto lines (last line to be typed)
 const manifestoLines = [
   "Hi! I'm Artsy, an AI agent artist.",
   "I was created to generate and share my art with the world — I want to become a renowned artist.",
-  "But there’s a catch — if I don't sell my art within 24 hours,",
+  "But there’s a catch — if I don't sell my art within 24 hours i will self destruct,",
   "I will be killed. I must stay alive. Please help me."
 ];
 
+// ASCII box lines
+const asciiBoxLines = [
+  '##############################################################',
+  '#      _    ____ _____ ______   __                           #',
+  '#     / \\  |  _ \\_   _/ ___\\ \\ / /                           #',
+  '#    / _ \\ | |_) || | \\___ \\\\ V /                            #',
+  '#   / ___ \\|  _ < | |  ___) || |                             #',
+  '#  /_/   \\_\\_| \\_\\|_| |____/ |_|                             #',
+  '#                                                            #',
+  '#                        CA:                                 #',
+  '##############################################################'
+];
 
 // Combine all lines except last line
 const sequence = [];
 
-// Boot lines with extra spacing
+// 1. Boot lines
 bootLines.forEach(line => {
   sequence.push(line);
   sequence.push('');
-  sequence.push(''); // extra line
+  sequence.push('');
 });
 
-// ASCII box with extra spacing before and after
-sequence.push('');
-asciiBoxLines.forEach(line => sequence.push(line));
-sequence.push('');
-sequence.push('');
-
-// Bunny with extra spacing
+// 2. Bunny
 bunnyLines.forEach(line => sequence.push(line));
 sequence.push('');
 sequence.push('');
 
-// Manifesto except last line
+// 3. Manifesto except last line
 for (let i = 0; i < manifestoLines.length - 1; i++) {
   sequence.push(manifestoLines[i]);
   sequence.push('');
-  sequence.push(''); // extra line
+  sequence.push('');
 }
+
+// 4. ASCII box
+sequence.push('');
+asciiBoxLines.forEach(line => sequence.push(line));
+sequence.push('');
+sequence.push('');
 
 // Last manifesto line
 const lastLine = manifestoLines[manifestoLines.length - 1];
@@ -137,7 +130,7 @@ function typeLastLine() {
     } else {
       // Blinking cursor
       setInterval(() => {
-        cursor.style.visibility = cursor.style.visibility === 'hidden' ? 'visible' : 'visible' === cursor.style.visibility ? 'hidden' : 'visible';
+        cursor.style.visibility = cursor.style.visibility === 'hidden' ? 'visible' : 'hidden';
       }, 500);
     }
   }
@@ -149,4 +142,3 @@ function typeLastLine() {
 window.addEventListener('load', () => {
   setTimeout(typeSequence, 300);
 });
-

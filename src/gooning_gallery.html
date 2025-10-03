@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artsy Gallery</title>
+  <link rel="stylesheet" href="../styles/style.css" />
+  <style>
+    /* Same design as index/activity */
+    body {
+      background: #fff;
+      color: #000;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .terminal {
+      width: 95%;
+      max-width: 1200px;
+      max-height: 85vh;
+      padding: 32px 22px 22px 22px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      overflow: auto;
+      position: relative;
+      background: #fff;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .terminal-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 32px;
+      background-color: #f3f3f3;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      box-sizing: border-box;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    .terminal-title { font-size: 13px; font-weight: bold; color: #555; }
+
+    .window-controls { display: flex; gap: 6px; }
+    .window-btn { width: 16px; height: 16px; border: none; border-radius: 50%; cursor: default; padding: 0; }
+    .window-btn:nth-child(1) { background-color: #fdbc40; }
+    .window-btn:nth-child(2) { background-color: #34c84a; }
+    .window-btn:nth-child(3) { background-color: #fc605c; }
+    .window-btn:hover { opacity: 0.8; }
+
+    /* Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 22px;
+      padding: 48px 12px 12px 12px;
+      box-sizing: border-box;
+      width: 100%;
+      align-content: start;
+    }
+
+    .gallery-item {
+      background: #fff;
+      border: 6px solid #eee; /* frame effect */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-radius: 4px;
+      overflow: hidden;
+      display:flex;
+      flex-direction:column;
+      align-items:stretch;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display:block;
+    }
+
+    .gallery-caption {
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      text-align:center;
+      background:#fafafa;
+      border-top: 1px solid #eee;
+    }
+
+    .meta-row {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding: 8px 12px;
+      border-top: 1px dashed rgba(0,0,0,0.03);
+      font-size: 12px;
+      color: #666;
+      background: #fff;
+    }
+
+    .terminal-footer {
+      padding: 10px 18px;
+      font-family: 'Courier New', monospace;
+      color: #000;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .terminal-footer a { color: #000; text-decoration:none; }
+    .terminal-footer:hover { text-decoration: underline; }
+    .small-muted { color:#888; font-size:13px; }
+
+    /* Bunny floating */
+    .bunny {
+      font-family: monospace;
+      white-space: pre;
+      text-align: left;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid #ddd;
+      padding: 6px 8px;
+      border-radius: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      font-size: 14px;
+      line-height: 1.2;
+      z-index: 1000;
+    }
+
+    /* Dev reset button (hidden lookalike) */
+    .reset-btn {
+      font-size: 12px;
+      color: #888;
+      cursor: pointer;
+    }
+    .reset-btn:hover {
+      text-decoration: underline;
+      color: #000;
+    }
+
+    .empty-note {
+      grid-column: 1/-1;
+      text-align:center;
+      color:#888;
+      padding: 24px 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal" role="application" aria-label="Artsy gallery terminal">
+    <div class="terminal-header">
+      <span class="terminal-title">artsy.gallery.terminal</span>
+      <div class="window-controls">
+        <button class="window-btn">–</button>
+        <button class="window-btn">□</button>
+        <button class="window-btn">×</button>
+      </div>
+    </div>
+
+    <!-- GALLERY -->
+    <div class="gallery" id="gallery"></div>
+
+    <div class="terminal-footer">
+      <div onclick="window.location.href='index.html'" style="cursor:pointer;">← back to artsy.terminal</div>
+      <div class="small-muted">
+        All revealed artworks collected in one place |
+        <span class="reset-btn" onclick="resetGallery()">reset</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Bunny -->
+  <div class="bunny">
+(\_/)  
+( •_•)  
+/ >🎨  Let's make art!
+  </div>
+
+  <script>
+    const galleryEl = document.getElementById("gallery");
+
+    // Render gallery array (server-provided)
+    function renderGallery(items) {
+      galleryEl.innerHTML = "";
+      if (!items || items.length === 0) {
+        galleryEl.innerHTML = '<div class="empty-note">No artworks revealed yet. Come back soon.</div>';
+        return;
+      }
+      items.forEach(a => {
+        const item = document.createElement("div");
+        item.className = "gallery-item";
+        // Use server-provided src (absolute path like /assets/...)
+        const ts = new Date(a.ts || Date.now());
+        const human = ts.toLocaleString();
+        item.innerHTML = `
+          <img src="${a.src}" alt="${a.title}">
+          <div class="gallery-caption">${a.title}</div>
+          <div class="meta-row">
+            <div>Revealed: ${human}</div>
+            <div style="opacity:0.8;">#${a.index + 1}</div>
+          </div>
+        `;
+        galleryEl.appendChild(item);
+      });
+    }
+
+    // Fetch gallery from server
+    async function fetchGallery() {
+      try {
+        const res = await fetch("/api/gallery");
+        if (!res.ok) throw new Error("Failed to load gallery");
+        const data = await res.json();
+        renderGallery(data);
+      } catch (err) {
+        galleryEl.innerHTML = `<div class="empty-note">Error loading gallery: ${err.message}</div>`;
+      }
+    }
+
+    // Reset gallery via server reset endpoint (protected)
+    async function resetGallery() {
+      const key = prompt("Enter dev secret to reset gallery and session:");
+      if (!key) return;
+      try {
+        const res = await fetch("/api/reset", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key })
+        });
+        const json = await res.json();
+        if (res.ok && json.ok) {
+          alert("Reset accepted. Re-syncing gallery...");
+          setTimeout(fetchGallery, 400);
+        } else {
+          alert("Reset failed: " + (json && json.error ? json.error : "unknown"));
+        }
+      } catch (err) {
+        alert("Reset request error: " + err.message);
+      }
+    }
+
+    // Poll for updates every 8 seconds so viewers see new revealed artworks quickly
+    window.addEventListener("load", () => {
+      fetchGallery();
+      setInterval(fetchGallery, 8000);
+    });
+  </script>
+</body>
+</html>

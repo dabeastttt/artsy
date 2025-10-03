@@ -26,7 +26,6 @@ const artworks = [
   "armpits galore.png",
   "attraction furry.png",
   "bikini pony.png",
-  "bursting pred.png",
   "busty bikini bottom.png",
   "cheerleading catgirl.png",
   "chinese widow.png",

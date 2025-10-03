@@ -3,175 +3,188 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Artsy Gallery</title>
+  <title>gooning Gallery</title>
   <link rel="stylesheet" href="../styles/style.css" />
   <style>
     /* Same design as index/activity */
-    body {
-      background: #fff;
-      color: #000;
-      font-family: monospace;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
+body {
+  background: #000; 
+  color: #ff4fd8;  
+  font-family: 'Courier New', monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+}
 
-    .terminal {
-      width: 95%;
-      max-width: 1200px;
-      max-height: 85vh;
-      padding: 32px 22px 22px 22px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-      overflow: auto;
-      position: relative;
-      background: #fff;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-    }
+.terminal {
+  width: 95%;
+  max-width: 1200px;
+  max-height: 90vh;
+  padding: 22px;
+  border: 2px solid #ff4fd8; 
+  border-radius: 8px;
+  box-shadow: 0 0 15px #ff4fd8; 
+  overflow: auto;
+  position: relative;
+  background: #000;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
 
-    .terminal-header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 32px;
-      background-color: #f3f3f3;
-      border-bottom: 1px solid #ddd;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 10px;
-      box-sizing: border-box;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-    }
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  color: #ff4fd8;
+  padding: 5px 10px;
+  font-weight: bold;
+}
 
-    .terminal-title { font-size: 13px; font-weight: bold; color: #555; }
+.terminal-title {
+  font-size: 13px;
+  font-weight: bold;
+  color: #ff4fd8;
+}
 
-    .window-controls { display: flex; gap: 6px; }
-    .window-btn { width: 16px; height: 16px; border: none; border-radius: 50%; cursor: default; padding: 0; }
-    .window-btn:nth-child(1) { background-color: #fdbc40; }
-    .window-btn:nth-child(2) { background-color: #34c84a; }
-    .window-btn:nth-child(3) { background-color: #fc605c; }
-    .window-btn:hover { opacity: 0.8; }
+.window-controls {
+  display: flex;
+  gap: 5px;
+}
 
-    /* Gallery */
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 22px;
-      padding: 48px 12px 12px 12px;
-      box-sizing: border-box;
-      width: 100%;
-      align-content: start;
-    }
+.window-btn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  background: #ff4fd8;
+  color: #000;
+  transition: background 0.2s ease;
+}
 
-    .gallery-item {
-      background: #fff;
-      border: 6px solid #eee; /* frame effect */
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      border-radius: 4px;
-      overflow: hidden;
-      display:flex;
-      flex-direction:column;
-      align-items:stretch;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+.window-btn:hover {
+  background: #fff;
+  color: #ff4fd8;
+}
 
-    .gallery-item:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-    }
+/* Gallery grid */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+  padding: 48px 12px 12px 12px;
+  box-sizing: border-box;
+  width: 100%;
+  align-content: start;
+}
 
-    .gallery-item img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      display:block;
-    }
+.gallery-item {
+  background: #111;
+  border: 2px solid #ff4fd8;
+  border-radius: 6px;
+  overflow: hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-    .gallery-caption {
-      padding: 10px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #333;
-      text-align:center;
-      background:#fafafa;
-      border-top: 1px solid #eee;
-    }
+.gallery-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 15px #ff4fd8;
+}
 
-    .meta-row {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      padding: 8px 12px;
-      border-top: 1px dashed rgba(0,0,0,0.03);
-      font-size: 12px;
-      color: #666;
-      background: #fff;
-    }
+.gallery-item img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display:block;
+  border-bottom: 1px solid #ff4fd8;
+}
 
-    .terminal-footer {
-      padding: 10px 18px;
-      font-family: 'Courier New', monospace;
-      color: #000;
-      border-top: 1px solid rgba(0,0,0,0.05);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
+.gallery-caption {
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ff4fd8;
+  text-align: center;
+  background: #111;
+  border-top: 1px solid #ff4fd8;
+}
 
-    .terminal-footer a { color: #000; text-decoration:none; }
-    .terminal-footer:hover { text-decoration: underline; }
-    .small-muted { color:#888; font-size:13px; }
+.meta-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding: 8px 12px;
+  border-top: 1px dashed rgba(255,79,216,0.2);
+  font-size: 12px;
+  color: #888;
+  background: #111;
+}
 
-    /* Bunny floating */
-    .bunny {
-      font-family: monospace;
-      white-space: pre;
-      text-align: left;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: rgba(255,255,255,0.85);
-      border: 1px solid #ddd;
-      padding: 6px 8px;
-      border-radius: 6px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      font-size: 14px;
-      line-height: 1.2;
-      z-index: 1000;
-    }
+.terminal-footer {
+  padding: 10px 18px;
+  font-family: 'Courier New', monospace;
+  color: #ff4fd8;
+  border-top: 1px solid #ff4fd8;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
 
-    /* Dev reset button (hidden lookalike) */
-    .reset-btn {
-      font-size: 12px;
-      color: #888;
-      cursor: pointer;
-    }
-    .reset-btn:hover {
-      text-decoration: underline;
-      color: #000;
-    }
+.terminal-footer a { color: #ff4fd8; text-decoration:none; }
+.terminal-footer:hover { text-decoration: underline; }
 
-    .empty-note {
-      grid-column: 1/-1;
-      text-align:center;
-      color:#888;
-      padding: 24px 12px;
-    }
+.small-muted { color:#888; font-size:13px; }
+
+/* Bunny floating */
+.bunny {
+  font-family: monospace;
+  white-space: pre;
+  text-align: left;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0,0,0,0.85);
+  border: 1px solid #ff4fd8;
+  padding: 6px 8px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px #ff4fd8;
+  font-size: 14px;
+  line-height: 1.2;
+  z-index: 1000;
+}
+
+/* Dev reset button (hidden lookalike) */
+.reset-btn {
+  font-size: 12px;
+  color: #888;
+  cursor: pointer;
+}
+.reset-btn:hover {
+  text-decoration: underline;
+  color: #ff4fd8;
+}
+
+.empty-note {
+  grid-column: 1/-1;
+  text-align:center;
+  color:#888;
+  padding: 24px 12px;
+}
   </style>
 </head>
 <body>
-  <div class="terminal" role="application" aria-label="Artsy gallery terminal">
+  <div class="terminal" role="application" aria-label="gooning gallery terminal">
     <div class="terminal-header">
-      <span class="terminal-title">artsy.gallery.terminal</span>
+      <span class="terminal-title">raw.uncensord.gallery.terminal</span>
       <div class="window-controls">
         <button class="window-btn">–</button>
         <button class="window-btn">□</button>
@@ -183,7 +196,7 @@
     <div class="gallery" id="gallery"></div>
 
     <div class="terminal-footer">
-      <div onclick="window.location.href='index.html'" style="cursor:pointer;">← back to artsy.terminal</div>
+      <div onclick="window.location.href='index.html'" style="cursor:pointer;">← back to gooner.terminal</div>
       <div class="small-muted">
         All revealed artworks collected in one place |
         <span class="reset-btn" onclick="resetGallery()">reset</span>
@@ -193,9 +206,9 @@
 
   <!-- Floating Bunny -->
   <div class="bunny">
-(\_/)  
-( •_•)  
-/ >🎨  Let's make art!
+       (｡♥‿♥｡) 
+       /( .Y. )\ ~ goonmaxing
+         |   |   
   </div>
 
   <script>

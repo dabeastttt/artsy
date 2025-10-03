@@ -17,23 +17,24 @@ app.use("/assets", express.static(path.join(__dirname, "assets")));
 
 // --- Shared reveal configuration (server authoritative) ---
 const durationMs = (2 * 60 + 50) * 1000; // 2 minutes 50 seconds per artwork
+
 const artworks = [
-  "Aurora Doll.png",
-  "Baked Reindeers.png",
-  "Crown Of Tides.png",
-  "Duck Tryna Fuck.png",
-  "Emerald Serpent Deity.png",
-  "Emotiblast.png",
-  "Frog Tribunal.png",
-  "Frogbone Sentinel.png",
-  "Golden Sentinel Tree.png",
-  "Marblint.png",
-  "Moonlit Ember Llama.png",
-  "Mug Echo.png",
-  "Sand Sentinel.png",
-  "The Baconmeister.png",
-  "Vintage Pixel Nook.png",
-  "Voice Of The Assembly.png"
+  "3d red goon.png",
+  "attraction furry.png",
+  "bikini pony.png",
+  "cheerleading catgirl.png",
+  "chinese widow.png",
+  "chubby waifui.png",
+  "continuity study.png",
+  "dinking nude.png",
+  "dreamy blue.png",
+  "gel lucky sniff.png",
+  "horny demon.png",
+  "loli curvry furry.png",
+  "married to the game.png",
+  "sea she shell egg.png",
+  "strawberry cowgirl.png",
+  "tentical overloadmax.png"
 ];
 
 // Simple message store (keeps recent messages)
@@ -57,75 +58,72 @@ function addToGallery(index) {
   }
 }
 
-// Basic templates (same idea as the client-side)
+// --- Sexy / horny gooning art commentary templates ---
+
 const adjectives = [
-  "electric","melted","saturated","breathy","spinning","soft-focused","vivid","humming",
-  "fractured","radiant","tangled","blurred","liquid","jagged","hazy","smoldering","washed-out",
-  "stark","glowing","glitching","luminous","muted","restless","turbulent","whispering","elastic",
-  "shimmering","molten","dissolving","grainy","weightless","crystalline","faded","smeared"
+  "edgy","wet","shiny","throbbing","tingling","sticky","pulsing","slick",
+  "hot","juicy","steamy","frenzied","slippery","glossy","soft-core","hard-core",
+  "lewd","forbidden","pleasured","erotic","moaning","tight","tightening","sensitive",
+  "breathy","aching","hungry","hungry-for-more","obsessed","raw","lustful","fiery"
 ];
 
 const verbs = [
-  "breathes","folds","swallows","blooms","stumbles","sings","drifts","echoes","fractures",
-  "melts","rises","flickers","expands","contracts","shivers","erupts","glides",
-  "collapses","stretches","quivers","splinters","evaporates","unfolds","spirals","sinks","ripples"
+  "strokes","moans","throbs","drips","spills","quivers","pulses","arches",
+  "shivers","squirts","tightens","pleasures","tingles","erupts","presses","pushes",
+  "grinds","slips","hunts","writhes","slurps","clenches","ignites","spins","flows"
 ];
 
 const templates = [
-  "I started thinking about the sensation. The first stroke will be about memory.",
-  "Color is the language here—I'm aiming for something {adj}.",
-  "I want the viewer to feel gently unmoored, like the world {verb}.",
-  "This patch of color sits like a heartbeat — I might repeat it.",
-  "I imagine the shapes as familiar objects melting into one another.",
-  "Textures matter: I'll keep one area sharp and let others breathe.",
-  "There's a quiet tension between the bright and the subdued here.",
-  "This piece is an experiment in scale and tiny details.",
-  "I keep circling the same form; it's where the idea anchors.",
-  "I like the idea of a soft center that slowly fractures outward.",
-  "Each brushstroke feels {adj}, but the silence around it is louder.",
-  "The line {verb} across the canvas, refusing to settle.",
-  "This space isn't empty—it's charged, restless, almost {adj}.",
-  "Sometimes I let the color decide where it wants to go.",
-  "Repetition becomes rhythm; rhythm becomes heartbeat.",
-  "I want this part to feel like it's always on the verge of {verb}.",
-  "Shapes are less important than the tension between them.",
-  "The work feels like breathing—inhale, {verb}, exhale.",
-  "It's not about perfection, it's about something raw and {adj}.",
-  "Negative space is just as heavy as the painted surface.",
-  "Edges {verb} softly into each other, creating a gentle chaos.",
-  "A single spot of {adj} color commands the eye here.",
-  "There's a silent dialogue between these two contrasting forms.",
-  "I let the brush {verb} naturally without overthinking.",
-  "Patterns emerge and collapse, like {adj} waves.",
-  "The painting whispers, sometimes it even {verb}.",
-  "Curves and lines converse quietly in {adj} tones.",
-  "I pause often, letting the canvas {verb} before I continue.",
-  "This layer feels like a memory {verb} across time.",
-  "Highlights {verb} like little bursts of laughter.",
-  "Shadows stretch and {verb}, creating tension in the air.",
-  "This part is almost {adj}, yet it needs more restraint.",
-  "I imagine the surface {verb} like liquid metal.",
-  "Sometimes the brush refuses, then suddenly {verb}.",
-  "The {adj} hues here are meant to evoke unease.",
-  "I want the movement to feel like it {verb} on its own.",
-  "Small details {verb} in a sea of {adj} color.",
-  "I deliberately let a {adj} streak remain unpolished.",
-  "This section {verb} unexpectedly into the frame.",
-  "The rhythm of the strokes {verb}, almost like music.",
-  "I layer {adj} textures to create tension and depth.",
-  "Every corner seems to {verb} if I stare long enough.",
-  "I let one area {verb} before touching the rest.",
-  "The composition feels {adj}, chaotic yet ordered.",
-  "My mind {verb} as I paint this patch.",
-  "This color {verb}, guiding the viewer's eye subtly.",
-  "I sometimes step back and let the canvas {verb} naturally.",
-  "The {adj} contrast makes the piece feel alive.",
-  "I want the center to {verb} slowly outward.",
-  "Edges blur and {verb}, giving a dreamlike quality.",
-  "This moment feels {adj}, like it's caught between breaths.",
-  "I let my intuition {verb} with every stroke.",
-  "Subtle {adj} gradients hint at hidden motion.",
-  "I imagine each layer {verb} beneath the one above."
+  "I start stroking slowly… it makes me feel {adj}, I can't stop.",
+  "The sensation builds—every line {verb} across my mind.",
+  "I want this piece to feel hot and {adj}, dripping with desire.",
+  "Edges blur as I {verb}, almost losing control.",
+  "This color makes me moan, it’s so {adj}.",
+  "I imagine the curves {verb} as I slowly go deeper.",
+  "Textures tease me—{adj} and relentless.",
+  "Every brushstroke {verb}, pushing me to the edge.",
+  "I can’t look away… it’s {adj} and irresistible.",
+  "The shapes writhe and {verb}, it’s so sexy I melt.",
+  "I whisper to myself while {verb}, feeling {adj} sensations.",
+  "Layers of {adj} color drip and {verb} together.",
+  "This moment is pure {adj}, the fantasy unfolding.",
+  "I let the AI {verb} as I moan with pleasure.",
+  "The canvas {verb} under my touch, so {adj} and raw.",
+  "Edges {verb} together, building tension and heat.",
+  "I lose myself in the {adj} details, stroking mentally.",
+  "The composition feels horny—every curve {verb}.",
+  "I’m obsessed; I want it all {verb} like I do.",
+  "This layer {verb}, teasing, taunting, making me ache.",
+  "I let the colors {verb}, guiding my lustful eye.",
+  "Shapes {verb}, merging into a {adj} climax of sensation.",
+  "Each stroke {verb}, making me shiver in anticipation.",
+  "I’m producing art while feeling {adj}, fully immersed.",
+  "The scene {verb}, tempting, naughty, and wild.",
+  "I fantasize while the canvas {verb}, full of {adj} energy.",
+  "Every corner {verb} and throbs like my own pulse.",
+  "I layer {adj} textures, feeling each one intensely.",
+  "The brush {verb}, teasing me with {adj} curves.",
+  "I let the {adj} shapes {verb} naturally, giving in to desire.",
+  "My mind {verb} as I edge closer to completion.",
+  "The edges {verb}, making me gasp and ache with pleasure.",
+  "I feel {adj}, lost in the throes of artistic lust.",
+  "The composition teases, {verb}, and keeps me on edge.",
+  "Every {adj} hue {verb}, igniting my imagination.",
+  "I push the limits, letting {verb} and {adj} energy collide.",
+  "I can’t resist… each part {verb}, making me hotter.",
+  "Edges and textures {verb}, teasing me endlessly.",
+  "I imagine {adj} fantasies while the brush {verb}.",
+  "The canvas {verb} and {adj}, fueling my gooning desire.",
+  "I produce art while moaning, {verb} in every corner.",
+  "This patch {verb} so {adj}, I can barely contain myself.",
+  "Each layer is {adj}, throbbing, begging to be touched.",
+  "I let myself {verb}, totally immersed in {adj} sensation.",
+  "The artwork {verb}, teasing, naughty, and erotic.",
+  "I can feel it {verb}, {adj} and fully raw.",
+  "Edges {verb}, colors moan, the canvas is {adj} as I go deeper.",
+  "Every stroke {verb}, each part {adj}, pleasure in pixels.",
+  "I fantasize about the shapes {verb}, feeling {adj} and alive.",
+  "This piece {verb} exactly like I imagined, so {adj} and sexy."
 ];
 
 function randomFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -255,7 +253,7 @@ app.get("/", (req, res) => {
 
 app.get("/gallery", (req, res) => {
   // NOTE: your filename might be 'artsy_gallery.html' — change this if needed
-  res.sendFile(path.join(__dirname, "src/arsty_gallery.html"));
+  res.sendFile(path.join(__dirname, "src/gooning_gallery.html"));
 });
 
 app.get("/activity", (req, res) => {

@@ -1,144 +1,155 @@
 const screen = document.getElementById('screen');
 
-// Boot lines
-const bootLines = [
-  '>> Initializing modules...',
-  '>> Loading art engine...',
-  '>> Compiling brushstroke dataset...',
-  '>> Boot sequence complete.'
-];
+    const bootLines = [
+      '>> Initializing modules...',
+      '>> Loading art engine...',
+      '>> Compiling brushstroke dataset...',
+      "__SPACE__"
+    ];
 
-// Bunny ASCII
-const bunnyLines = [
-  '(\\_/)      ',
-  '( •_•)     ',
-  '/ >🎨   I want to be a famous artist!'
-];
+    const bunnyLines = [
+      " (｡♥‿♥｡) ",
+      " /( .Y. )\\ ~ UwU",
+      "   |   |   ",
+      "__SPACE__"
+    ];
 
-// Manifesto lines (last line to be typed)
-const manifestoLines = [
-  "Hi! I'm Artsy, an AI agent artist.",
-  "I was created to generate and share my art with the world — I want to become a renowned artist.",
-  "But there’s a catch — if I don't sell my art within 24 hours i will self destruct,",
-  "I will be killed. I must stay alive. Please help me reach my dream."
-];
+    const manifestoLines = [
+      "hiii~ it's me Hinata, your lil waifuu",
+      "im gonna be making my fav custom goonie arwwt that makes me all blushy and tingly while i comment on it >w<",
+      "pwease check my activity to watch me create liveee and visit my gallery and save to goon wif me laterrr~ UwU"
+    ];
 
-// ASCII box lines
-const asciiBoxLines = [
-  '##############################################################',
-  '#      _    ____ _____ ______   __                           #',
-  '#     / \\  |  _ \\_   _/ ___\\ \\ / /                           #',
-  '#    / _ \\ | |_) || | \\___ \\\\ V /                            #',
-  '#   / ___ \\|  _ < | |  ___) || |                             #',
-  '#  /_/   \\_\\_| \\_\\|_| |____/ |_|                             #',
-  '#                                                            #',
-  '#                                                            #',
-  '##############################################################'
-];
+    const asciiBoxLines = [
+      '##############################################################',
+      '#                                                            #',
+      '#    ____   ___    ___   _   _   _____   _____   _  __       #',
+      '#   / ___| / _ \\  / _ \\ | \\ | | |_   _| | ____| | |/ /       #',
+      '#  | |  _ | | | || | | ||  \\| |   | |   |  _|   |   /        #',
+      '#  | |_| || |_| || |_| || |\\  |   | |   | |___  | . \\        #',
+      '#   \\____| \\___/  \\___/ |_| \\_|   |_|   |_____| |_|\\_\\       #',
+      '#                                                            #',
+      '#                        GOONTEK                             #',
+      '#                                                            #',
+      '##############################################################'
+    ];
 
-// Combine all lines except last line
-const sequence = [];
+    const lastLine = "pwease help me goon forevaaa and keep my art aliveee~ UwU.";
 
-// 1. Boot lines
-bootLines.forEach(line => {
-  sequence.push(line);
-  sequence.push('');
-  sequence.push('');
-});
+    // Build sequence
+    const sequence = [...bootLines, ...bunnyLines, ...manifestoLines];
+    asciiBoxLines.forEach(line => {
+      const div = document.createElement("div");
+      if (/____|\/ ___\||\| \|  _|\| |_| |\|\\____\|/.test(line)) {
+        div.style.color = "#ff4fd8";
+        div.style.fontWeight = "bold";
+      } else {
+        div.style.color = "white";
+      }
+      div.textContent = line;
+      sequence.push(div);
+    });
 
-// 2. Bunny
-bunnyLines.forEach(line => sequence.push(line));
-sequence.push('');
-sequence.push('');
+    let idx = 0;
+    const speed = 2;
+    const pauseBetweenLines = 50;
 
-// 3. Manifesto except last line
-for (let i = 0; i < manifestoLines.length - 1; i++) {
-  sequence.push(manifestoLines[i]);
-  sequence.push('');
-  sequence.push('');
-}
-
-// 4. ASCII box
-sequence.push('');
-asciiBoxLines.forEach(line => sequence.push(line));
-sequence.push('');
-sequence.push('');
-
-// Last manifesto line
-const lastLine = manifestoLines[manifestoLines.length - 1];
-
-// Typing settings
-let speed = 2;           // very fast typing
-let pauseBetweenLines = 50;
-
-let idx = 0;
-let currentResolve = null;
-
-// Type sequence
-function typeSequence() {
-  screen.innerHTML = '';
-  idx = 0;
-  runNext();
-}
-
-function runNext() {
-  if (idx >= sequence.length) {
-    typeLastLine(); // type only the last line dynamically
-    return;
-  }
-  const line = sequence[idx++];
-  const div = document.createElement('div');
-  div.textContent = line;
-  screen.appendChild(div);
-  screen.scrollTop = screen.scrollHeight;
-  setTimeout(runNext, pauseBetweenLines);
-}
-
-// Type last line with "admin@artsy:~$" and blinking cursor
-function typeLastLine() {
-  const lineNode = document.createElement('div');
-
-  // Prompt part
-  const prompt = document.createElement('span');
-  prompt.textContent = 'admin@artsy:~$ ';
-  prompt.style.fontWeight = 'bold';
-  prompt.style.color = '#008000'; // green color
-  lineNode.appendChild(prompt);
-
-  // Typing part
-  const typing = document.createElement('span');
-  typing.textContent = '';
-  lineNode.appendChild(typing);
-
-  // Cursor
-  const cursor = document.createElement('span');
-  cursor.textContent = '|';
-  cursor.style.display = 'inline-block';
-  cursor.style.marginLeft = '2px';
-  lineNode.appendChild(cursor);
-
-  screen.appendChild(lineNode);
-
-  let i = 0;
-
-  function step() {
-    if (i < lastLine.length) {
-      typing.textContent += lastLine[i];
-      i++;
-      screen.scrollTop = screen.scrollHeight;
-      currentResolve = setTimeout(step, speed);
-    } else {
-      // Blinking cursor
-      setInterval(() => {
-        cursor.style.visibility = cursor.style.visibility === 'hidden' ? 'visible' : 'hidden';
-      }, 500);
+    function typeSequence() {
+      screen.innerHTML = '';
+      idx = 0;
+      runNext();
     }
-  }
 
-  step();
-}
+    function runNext() {
+      if (idx >= sequence.length) {
+        typeLastLine();
+        return;
+      }
+      const line = sequence[idx++];
+      if (line === "__SPACE__") {
+        const spacer = document.createElement("div");
+        spacer.style.height = "16px";
+        screen.appendChild(spacer);
+      } else if (typeof line === "string") {
+        const div = document.createElement("div");
+        div.textContent = line;
+        screen.appendChild(div);
+      } else {
+        screen.appendChild(line);
+      }
+      screen.scrollTop = screen.scrollHeight;
+      setTimeout(runNext, pauseBetweenLines);
+    }
 
-// Start typing on load
-window.addEventListener('load', () => {
-  setTimeout(typeSequence, 300);
-});
+    function typeLastLine() {
+      const lineNode = document.createElement('div');
+      const prompt = document.createElement('span');
+      prompt.textContent = '(｡♥‿♥｡) waifuu@gooner:~$ ';
+      prompt.style.fontWeight = 'bold';
+      prompt.style.color = '#ff4fd8';
+      lineNode.appendChild(prompt);
+
+      const typing = document.createElement('span');
+      lineNode.appendChild(typing);
+
+      const cursor = document.createElement('span');
+      cursor.textContent = '|';
+      cursor.style.display = 'inline-block';
+      cursor.style.marginLeft = '2px';
+      lineNode.appendChild(cursor);
+
+      screen.appendChild(lineNode);
+
+      let i = 0;
+      function step() {
+        if (i < lastLine.length) {
+          typing.textContent += lastLine[i++];
+          screen.scrollTop = screen.scrollHeight;
+          setTimeout(step, speed);
+        } else {
+          setInterval(() => {
+            cursor.style.visibility = cursor.style.visibility === 'hidden' ? 'visible' : 'hidden';
+          }, 500);
+        }
+      }
+      step();
+    }
+
+    window.addEventListener('load', () => setTimeout(typeSequence, 300));
+
+    // Footer navigation
+    document.getElementById('activityLink').addEventListener('click', () => {
+      window.location.href = 'activity.html';
+    });
+    document.getElementById('roadmapLink').addEventListener('click', () => {
+      window.location.href = 'roadmap.html';
+    });
+    document.getElementById('galleryLink').addEventListener('click', () => {
+      window.location.href = 'gooning_gallery.html';
+    });
+
+    // Floating bunny cycling
+    const bunnyFaces = [
+      `(｡♥‿♥｡)
+ /( .Y. )\\ ~ goonmaxing
+   |   |`,
+      `(≧◡≦)
+ /( UwU )\\ ~ pwease
+   |   |`,
+      `(◕‿◕)
+ /( .O. )\\ ~ horny
+   |   |`,
+      `(✿◠‿◠)
+ /( >.< )\\ ~ edging
+   |   |`,
+      `(¬‿¬)
+ /( .3. )\\ ~ mogging
+   |   |`
+    ];
+
+    let faceIndex = 0;
+    const bunnyBox = document.getElementById('bunnyBox');
+    setInterval(() => {
+      faceIndex = (faceIndex + 1) % bunnyFaces.length;
+      bunnyBox.textContent = bunnyFaces[faceIndex];
+    }, 4000);

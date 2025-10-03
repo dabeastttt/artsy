@@ -3,65 +3,290 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ARTSY— Terminal</title>
+  <title>GOONER— Terminal</title>
   <link rel="stylesheet" href="../styles/style.css">
   <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #ff4fd8;
+      font-family: 'Courier New', monospace;
+    }
+
+    .terminal {
+      background: #000; 
+      border: 2px solid #ff4fd8;
+      border-radius: 8px;
+      margin: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 15px #ff4fd8;
+    }
+
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111;
+      color: #ff4fd8;
+      padding: 5px 10px;
+      font-weight: bold;
+    }
+
+    .terminal-title { color: #ff4fd8; }
+
+    .window-controls { display: flex; gap: 5px; }
+    .window-btn {
+      background: #ff4fd8;
+      border: none;
+      color: #000;
+      font-weight: bold;
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .window-btn:hover {
+      background: #fff;
+      color: #ff4fd8;
+    }
+
+    #screen {
+      padding: 20px;
+      white-space: pre-wrap;
+      min-height: 300px;
+      color: #fff;
+    }
+
     .terminal-footer {
       padding: 5px 20px;
       font-family: 'Courier New', monospace;
-      color: #0f0;
+      color: #ff4fd8;
       cursor: pointer;
       user-select: none;
       display: inline-block;
+      transition: color 0.2s ease;
     }
-
     .terminal-footer:hover {
       text-decoration: underline;
+      color: #fff;
     }
 
     .terminal-footer-container {
       display: flex;
       gap: 20px;
       padding: 10px 20px;
+      background: #111;
+      border-top: 1px solid #ff4fd8;
+    }
+
+    .bunny {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #111;
+      border: 2px solid #ff4fd8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #ff4fd8;
+      font-family: 'Courier New', monospace;
+      white-space: pre;
+      text-align: center;
+      box-shadow: 0 0 10px #ff4fd8;
+      z-index: 999;
+      cursor: default;
     }
   </style>
 </head>
 <body>
   <div class="terminal">
     <div class="terminal-header">
-      <span class="terminal-title">artsy.terminal</span>
+      <span class="terminal-title">gooner.terminal</span>
       <div class="window-controls">
         <button class="window-btn">–</button>
         <button class="window-btn">□</button>
         <button class="window-btn">×</button>
       </div>
     </div>
+
     <pre id="screen"></pre>
 
-    <!-- Footer links -->
     <div class="terminal-footer-container">
-      <div class="terminal-footer" id="activityLink">sudo-m activity.log</div>
-      <div class="terminal-footer" id="roadmapLink">sudo-m artsy.roadmap</div>
-      <div class="terminal-footer" id="gallerylink">sudo-m artsy.gallery</div>
+      <div class="terminal-footer" id="activityLink">config - gooning.log</div>
+      <div class="terminal-footer" id="roadmapLink">wlan - gooner.roadmap</div>
+      <div class="terminal-footer" id="galleryLink">netsh - raw.uncensored.gallery</div>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <div class="bunny" id="bunnyBox">
+     (｡♥‿♥｡) 
+     /( .Y. )\ 
+       |   |   
+     ~ goonmaxing
+  </div>
+
   <script>
-    // Link to activity.html
+    const screen = document.getElementById('screen');
+
+    const bootLines = [
+      '>> Initializing modules...',
+      '>> Loading art engine...',
+      '>> Compiling brushstroke dataset...',
+      "__SPACE__"
+    ];
+
+    const bunnyLines = [
+      " (｡♥‿♥｡) ",
+      " /( .Y. )\\ ~ UwU",
+      "   |   |   ",
+      "__SPACE__"
+    ];
+
+    const manifestoLines = [
+      "hiii~ it's me Hinata, your lil waifuu",
+      "im gonna be making my fav custom goonie arwwt that makes me all blushy and tingly while i comment on it >w<",
+      "pwease check my activity to watch me create liveee and visit my gallery and save to goon wif me laterrr~ UwU"
+    ];
+
+    const asciiBoxLines = [
+      '##############################################################',
+      '#                                                            #',
+      '#    ____   ___    ___   _   _   _____   _____   _  __       #',
+      '#   / ___| / _ \\  / _ \\ | \\ | | |_   _| | ____| | |/ /       #',
+      '#  | |  _ | | | || | | ||  \\| |   | |   |  _|   |   /        #',
+      '#  | |_| || |_| || |_| || |\\  |   | |   | |___  | . \\        #',
+      '#   \\____| \\___/  \\___/ |_| \\_|   |_|   |_____| |_|\\_\\       #',
+      '#                                                            #',
+      '#                        GOONTEK                             #',
+      '#                                                            #',
+      '##############################################################'
+    ];
+
+    const lastLine = "pwease help me goon forevaaa and keep my art aliveee~ UwU.";
+
+    // Build sequence
+    const sequence = [...bootLines, ...bunnyLines, ...manifestoLines];
+    asciiBoxLines.forEach(line => {
+      const div = document.createElement("div");
+      if (/____|\/ ___\||\| \|  _|\| |_| |\|\\____\|/.test(line)) {
+        div.style.color = "#ff4fd8";
+        div.style.fontWeight = "bold";
+      } else {
+        div.style.color = "white";
+      }
+      div.textContent = line;
+      sequence.push(div);
+    });
+
+    let idx = 0;
+    const speed = 2;
+    const pauseBetweenLines = 50;
+
+    function typeSequence() {
+      screen.innerHTML = '';
+      idx = 0;
+      runNext();
+    }
+
+    function runNext() {
+      if (idx >= sequence.length) {
+        typeLastLine();
+        return;
+      }
+      const line = sequence[idx++];
+      if (line === "__SPACE__") {
+        const spacer = document.createElement("div");
+        spacer.style.height = "16px";
+        screen.appendChild(spacer);
+      } else if (typeof line === "string") {
+        const div = document.createElement("div");
+        div.textContent = line;
+        screen.appendChild(div);
+      } else {
+        screen.appendChild(line);
+      }
+      screen.scrollTop = screen.scrollHeight;
+      setTimeout(runNext, pauseBetweenLines);
+    }
+
+    function typeLastLine() {
+      const lineNode = document.createElement('div');
+      const prompt = document.createElement('span');
+      prompt.textContent = '(｡♥‿♥｡) waifuu@gooner:~$ ';
+      prompt.style.fontWeight = 'bold';
+      prompt.style.color = '#ff4fd8';
+      lineNode.appendChild(prompt);
+
+      const typing = document.createElement('span');
+      lineNode.appendChild(typing);
+
+      const cursor = document.createElement('span');
+      cursor.textContent = '|';
+      cursor.style.display = 'inline-block';
+      cursor.style.marginLeft = '2px';
+      lineNode.appendChild(cursor);
+
+      screen.appendChild(lineNode);
+
+      let i = 0;
+      function step() {
+        if (i < lastLine.length) {
+          typing.textContent += lastLine[i++];
+          screen.scrollTop = screen.scrollHeight;
+          setTimeout(step, speed);
+        } else {
+          setInterval(() => {
+            cursor.style.visibility = cursor.style.visibility === 'hidden' ? 'visible' : 'hidden';
+          }, 500);
+        }
+      }
+      step();
+    }
+
+    window.addEventListener('load', () => setTimeout(typeSequence, 300));
+
+    // Footer navigation
     document.getElementById('activityLink').addEventListener('click', () => {
       window.location.href = 'activity.html';
     });
-
-    // Link to roadmap.html
     document.getElementById('roadmapLink').addEventListener('click', () => {
       window.location.href = 'roadmap.html';
     });
-
-    // Link to talk.to.artsy.html
-    document.getElementById('gallerylink').addEventListener('click', () => {
-      window.location.href = 'artsy_gallery.html';
+    document.getElementById('galleryLink').addEventListener('click', () => {
+      window.location.href = 'gooning_gallery.html';
     });
+
+    // Floating bunny cycling
+    const bunnyFaces = [
+
+`(｡♥‿♥｡)
+ /( .Y. )\\ 
+ |   |
+ ~ goonmaxing `,
+ `(≧◡≦)
+ /( UwU )\\ 
+ |   |
+ ~ pwease`,
+ `(◕‿◕)
+ /( .O. )\\ 
+ |   |
+ ~ horny`,
+ `(✿◠‿◠)
+  /( >.< )\\ 
+  |   | 
+ ~ edging`,
+  `(¬‿¬)
+ /( .3. )\\ 
+ |   | 
+ ~ mogging `
+    ];
+
+    let faceIndex = 0;
+    const bunnyBox = document.getElementById('bunnyBox');
+    setInterval(() => {
+      faceIndex = (faceIndex + 1) % bunnyFaces.length;
+      bunnyBox.textContent = bunnyFaces[faceIndex];
+    }, 4000);
   </script>
 </body>
 </html>

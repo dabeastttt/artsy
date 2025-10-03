@@ -3,145 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Artsy Activity</title>
+  <title>gooning log</title>
   <link rel="stylesheet" href="../styles/style.css" />
   <style>
-    /* (same styles as before) */
-    body {
-      background: #fff;
-      color: #000;
-      font-family: monospace;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .terminal {
-      width: 95%;
-      max-width: 1000px;
-      max-height: 85vh;
-      padding: 32px 22px 22px 22px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-      overflow: auto;
-      position: relative;
-      background: #fff;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-    }
-    .terminal-header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 32px;
-      background-color: #f3f3f3;
-      border-bottom: 1px solid #ddd;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 10px;
-      box-sizing: border-box;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-    }
-    .terminal-title { font-size: 13px; font-weight: bold; color: #555; }
-    .window-controls { display: flex; gap: 6px; }
-    .window-btn { width: 16px; height: 16px; border: none; border-radius: 50%; cursor: default; padding: 0; }
-    .window-btn:nth-child(1) { background-color: #fdbc40; }
-    .window-btn:nth-child(2) { background-color: #34c84a; }
-    .window-btn:nth-child(3) { background-color: #fc605c; }
-    .window-btn:hover { opacity: 0.8; }
+/* Black background, neon pink terminal style (matches index.html) */
+body {
+  background: #000; 
+  color: #ff4fd8;  
+  font-family: 'Courier New', monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
 
-    .terminal-body {
-      display: grid;
-      grid-template-columns: 1fr 460px;
-      gap: 18px;
-      padding: 18px 0 0 0;
-      align-items: start;
-      min-height: 420px;
-      box-sizing: border-box;
-    }
-    #screen {
-      background: #fefefe;
-      border-radius: 10px;
-      padding: 18px;
-      height: 420px;
-      overflow-y: auto;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
-      font-size: 14px;
-      line-height: 1.4;
-      color: #000;
-    }
-    .activity-line { margin-bottom: 0.5em; display:flex; gap:8px; align-items:flex-start; }
-    .timestamp { color: #888; min-width:72px; font-size:12px; margin-top:1px; }
-    .event-text { white-space: pre-wrap; word-break: break-word; }
-    .preview {
-      background: #f7f7f7;
-      border-radius: 10px;
-      padding: 12px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      align-items:stretch;
-      height: 100%;
-      box-sizing:border-box;
-      border: 1px solid rgba(0,0,0,0.05);
-    }
-    .art-wrap {
-      height: 320px;
-      border-radius: 8px;
-      overflow:hidden;
-      background: #eee;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-    }
-    .art-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scale(1.02);
-      transition: filter 250ms linear, opacity 250ms linear;
-      filter: blur(40px);
-      opacity: 0.18;
-      display:block;
-    }
-    .art-meta { display:flex; justify-content:space-between; align-items:center; gap:12px; color:#888; font-size:13px; }
-    .progress { height: 8px; background: rgba(0,0,0,0.04); border-radius: 999px; overflow:hidden; width:100%; margin-top:4px; }
-    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, rgba(0,0,0,0.2), rgba(0,0,0,0.35)); border-radius: 999px; transition: width 300ms linear; }
-    .countdown { font-family: monospace; font-weight:700; color:#000; }
-    .terminal-footer {
-      padding: 10px 18px;
-      font-family: 'Courier New', monospace;
-      color: #000;
-      cursor: pointer;
-      user-select: none;
-      border-top: 1px solid rgba(0,0,0,0.05);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .terminal-footer:hover { text-decoration: underline; }
-    .terminal-footer a { color: #000; text-decoration:none; }
-    .small-muted { color:#888; font-size:13px; }
-    .dev-reset {
-      font-size: 11px;
-      color: #bbb;
-      cursor: pointer;
-      user-select: none;
-    }
-    .dev-reset:hover { text-decoration: underline; color: #666; }
+.terminal {
+  width: 95%;
+  max-width: 1200px;
+  max-height: 90vh;
+  padding: 22px;
+  border: 2px solid #ff4fd8; 
+  border-radius: 8px;
+  box-shadow: 0 0 15px #ff4fd8; 
+  overflow: hidden;
+  position: relative;
+  background: #000;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  color: #ff4fd8;
+  padding: 5px 10px;
+  font-weight: bold;
+}
+
+.terminal-title {
+  color: #ff4fd8;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.window-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.window-btn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  background: #ff4fd8;
+  color: #000;
+  transition: background 0.2s ease;
+}
+
+.window-btn:hover {
+  background: #fff;
+  color: #ff4fd8;
+}
+
+/* Terminal body: left AI commentary, right art preview */
+.terminal-body {
+  display: flex;
+  gap: 20px;
+  padding-top: 10px;
+  overflow-y: auto;
+  height: 420px;
+  box-sizing: border-box;
+}
+
+/* Left commentary */
+#screen {
+  flex: 1;
+  background: #000;
+  border-radius: 10px;
+  padding: 18px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #fff; 
+  white-space: pre-wrap;
+}
+
+/* Right preview */
+.preview {
+  width: 460px;
+  background: #111;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  box-sizing: border-box;
+  border: 1px solid rgba(255,79,216,0.2);
+  flex-shrink: 0;
+}
+
+.art-wrap {
+  height: 320px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.art-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition: filter 250ms linear, opacity 250ms linear;
+  filter: blur(40px);
+  opacity: 0.18;
+  display: block;
+}
+
+.art-meta { display:flex; justify-content:space-between; align-items:center; gap:12px; color:#888; font-size:13px; }
+
+.progress { height: 8px; background: rgba(255,79,216,0.1); border-radius: 999px; overflow:hidden; width:100%; margin-top:4px; }
+.progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, rgba(255,79,216,0.3), rgba(255,79,216,0.6)); border-radius: 999px; transition: width 300ms linear; }
+
+.countdown { font-family: monospace; font-weight:700; color:#ff4fd8; }
+
+.terminal-footer {
+  padding: 10px 18px;
+  font-family: 'Courier New', monospace;
+  color: #ff4fd8;
+  cursor: pointer;
+  user-select: none;
+  border-top: 1px solid #ff4fd8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.terminal-footer:hover { text-decoration: underline; color: #fff; }
+
+.activity-line { margin-bottom: 0.5em; display:flex; gap:8px; align-items:flex-start; }
+.timestamp { color: #888; min-width:72px; font-size:12px; margin-top:1px; }
+.event-text { white-space: pre-wrap; word-break: break-word; }
+
+.small-muted { color:#888; font-size:13px; }
+.dev-reset { font-size: 11px; color: #bbb; cursor: pointer; user-select: none; }
+.dev-reset:hover { text-decoration: underline; color: #666; }
+
   </style>
 </head>
 <body>
   <div class="terminal">
     <div class="terminal-header">
-      <span class="terminal-title">artsy.activity.terminal</span>
+      <span class="terminal-title">gooning.activity.terminal</span>
       <div class="window-controls">
         <button class="window-btn">–</button>
         <button class="window-btn">□</button>
@@ -157,7 +182,7 @@
         </div>
         <div class="art-meta">
           <div>
-            <div class="small-muted">Now: AI commentary + slow reveal (shared)</div>
+            <div class="small-muted">Now: AI commentary + slow edging (shared)</div>
             <div style="font-size:13px; font-weight:600;">Preview: <span id="artTitle">Unnamed piece</span></div>
           </div>
           <div style="text-align:right;">
@@ -170,8 +195,8 @@
     </div>
 
     <div class="terminal-footer">
-      <div onclick="window.location.href='index.html'">← back to artsy.terminal</div>
-      <div class="small-muted">Auto-reveal runs for 2:50 — finding suitable buyer <code>must survive</code></div>
+      <div onclick="window.location.href='index.html'">← back to gooner.terminal</div>
+      <div class="small-muted">Auto-reveal runs for 2:50 — scraping uncensord sites for goon content <code>must edgemax </code></div>
       <div class="dev-reset" onclick="devReset()">reset session</div>
     </div>
   </div>
@@ -327,10 +352,11 @@
       }
     }
 
+    // Bunny / Waifu ASCII mascot
     const bunnyLines = [
-      "  (\\_/)",
-      "  ( •_•)",
-      "  / >🎨   I want to be a famous artist!"
+      " (｡♥‿♥｡) ",
+      " /( .Y. )\\ ~ UwU",
+      "   |   |   ",
     ];
 
     function printBunny() {

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GOONER— Terminal</title>
   <link rel="stylesheet" href="../styles/style.css">
   <style>
@@ -17,7 +17,8 @@
       background: #000; 
       border: 2px solid #ff4fd8;
       border-radius: 8px;
-      margin: 20px;
+      margin: 20px auto;
+      max-width: 95%;
       overflow: hidden;
       box-shadow: 0 0 15px #ff4fd8;
     }
@@ -30,6 +31,7 @@
       color: #ff4fd8;
       padding: 5px 10px;
       font-weight: bold;
+      font-size: 1rem;
     }
 
     .terminal-title { color: #ff4fd8; }
@@ -52,42 +54,42 @@
     }
 
     #screen {
-      padding: 20px;
+      padding: 15px;
       white-space: pre-wrap;
-      min-height: 300px;
+      min-height: 250px;
+      font-size: 0.9rem;
       color: #fff;
-    }
-
-    .terminal-footer {
-      padding: 5px 20px;
-      font-family: 'Courier New', monospace;
-      color: #ff4fd8;
-      cursor: pointer;
-      user-select: none;
-      display: inline-block;
-      transition: color 0.2s ease;
-    }
-    .terminal-footer:hover {
-      text-decoration: underline;
-      color: #fff;
+      word-wrap: break-word;
     }
 
     .terminal-footer-container {
       display: flex;
-      gap: 20px;
-      padding: 10px 20px;
+      gap: 15px;
+      padding: 10px 15px;
+      flex-wrap: wrap;
       background: #111;
       border-top: 1px solid #ff4fd8;
     }
 
+    .terminal-footer {
+      padding: 5px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .terminal-footer:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
     .bunny {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 10px;
+      right: 10px;
       background: #111;
       border: 2px solid #ff4fd8;
       border-radius: 8px;
-      padding: 8px 12px;
+      padding: 6px 10px;
       color: #ff4fd8;
       font-family: 'Courier New', monospace;
       white-space: pre;
@@ -95,6 +97,16 @@
       box-shadow: 0 0 10px #ff4fd8;
       z-index: 999;
       cursor: default;
+      font-size: 0.85rem;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .terminal-header { font-size: 0.9rem; padding: 4px 8px; }
+      #screen { font-size: 0.8rem; padding: 10px; min-height: 200px; }
+      .terminal-footer-container { gap: 10px; padding: 8px 10px; }
+      .terminal-footer { font-size: 0.75rem; padding: 4px 8px; }
+      .bunny { font-size: 0.75rem; padding: 5px 8px; bottom: 5px; right: 5px; }
     }
   </style>
 </head>
@@ -164,7 +176,6 @@
 
     const lastLine = "pwease help me goon forevaaa and keep my art aliveee~ UwU.";
 
-    // Build sequence
     const sequence = [...bootLines, ...bunnyLines, ...manifestoLines];
     asciiBoxLines.forEach(line => {
       const div = document.createElement("div");
@@ -246,39 +257,32 @@
     window.addEventListener('load', () => setTimeout(typeSequence, 300));
 
     // Footer navigation
-    document.getElementById('activityLink').addEventListener('click', () => {
-      window.location.href = 'activity.html';
-    });
-    document.getElementById('roadmapLink').addEventListener('click', () => {
-      window.location.href = 'roadmap.html';
-    });
-    document.getElementById('galleryLink').addEventListener('click', () => {
-      window.location.href = 'gooning_gallery.html';
-    });
+    document.getElementById('activityLink').addEventListener('click', () => { window.location.href = 'activity.html'; });
+    document.getElementById('roadmapLink').addEventListener('click', () => { window.location.href = 'roadmap.html'; });
+    document.getElementById('galleryLink').addEventListener('click', () => { window.location.href = 'gooning_gallery.html'; });
 
     // Floating bunny cycling
     const bunnyFaces = [
-
-`(｡♥‿♥｡)
+      `(｡♥‿♥｡)
  /( .Y. )\\ 
  |   |
- ~ goonmaxing `,
- `(≧◡≦)
+ ~ goonmaxing`,
+      `(≧◡≦)
  /( UwU )\\ 
  |   |
  ~ pwease`,
- `(◕‿◕)
+      `(◕‿◕)
  /( .O. )\\ 
  |   |
  ~ horny`,
- `(✿◠‿◠)
-  /( >.< )\\ 
-  |   | 
+      `(✿◠‿◠)
+ /( >.< )\\ 
+ |   | 
  ~ edging`,
-  `(¬‿¬)
+      `(¬‿¬)
  /( .3. )\\ 
  |   | 
- ~ mogging `
+ ~ mogging`
     ];
 
     let faceIndex = 0;
@@ -290,3 +294,4 @@
   </script>
 </body>
 </html>
+

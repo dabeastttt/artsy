@@ -1,7 +1,7 @@
-/* You already have this */
+/* Global reset */
 body {
-  background: #fff;
-  color: #000;
+  background: #000; /* black background */
+  color: #fff; /* default white text */
   font-family: monospace;
   display: flex;
   align-items: center;
@@ -10,28 +10,29 @@ body {
   margin: 0;
 }
 
+/* Terminal container */
 .terminal {
   width: 95%;
   max-width: 1000px;
   max-height: 85vh;
-  padding: 32px 22px 22px 22px; /* increased top padding for header space */
-  border: 1px solid #ddd;
+  padding: 32px 22px 22px 22px;
+  border: 2px solid #ff4fd8; /* neon pink border */
   border-radius: 8px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 0 20px #ff4fd8; /* glowing effect */
   overflow: auto;
   position: relative;
-  background: #fff;
+  background: #000; /* terminal bg black */
 }
 
-/* Updated terminal-header */
+/* Terminal header */
 .terminal-header {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 32px;
-  background-color: #f3f3f3;
-  border-bottom: 1px solid #ddd;
+  background-color: #111; /* darker black for contrast */
+  border-bottom: 1px solid #ff4fd8;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -45,10 +46,10 @@ body {
 .terminal-title {
   font-size: 13px;
   font-weight: bold;
-  color: #555;
+  color: #ff4fd8; /* neon pink */
 }
 
-/* Fake window controls */
+/* Window controls */
 .window-controls {
   display: flex;
   gap: 6px;
@@ -58,27 +59,22 @@ body {
   width: 16px;
   height: 16px;
   border: none;
-  border-radius: 50%;
-  background-color: #bbb;
-  cursor: default;
+  border-radius: 4px;
+  background-color: #ff4fd8; /* neon pink */
+  cursor: pointer;
   padding: 0;
+  transition: background 0.2s ease, color 0.2s ease;
+  color: #000; /* black text/icons */
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
 }
 
-.window-btn:nth-child(1) {
-  background-color: #fdbc40; /* yellow */
-}
-
-.window-btn:nth-child(2) {
-  background-color: #34c84a; /* green */
-}
-
-.window-btn:nth-child(3) {
-  background-color: #fc605c; /* red */
-}
-
-/* Prevent button interaction */
+/* Hover effect */
 .window-btn:hover {
-  opacity: 0.8;
+  background: #fff;
+  color: #ff4fd8;
 }
 
 /* Pre text */
@@ -87,9 +83,11 @@ pre {
   font-size: 14px;
   line-height: 1.2;
   white-space: pre-wrap;
+  color: #fff; /* default text inside terminal is white */
 }
 
 .ascii {
   font-family: monospace;
   white-space: pre;
+  color: #ff4fd8; /* ASCII art in neon pink */
 }

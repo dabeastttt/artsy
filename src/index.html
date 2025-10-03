@@ -100,6 +100,35 @@
       font-size: 0.85rem;
     }
 
+    .info-box {
+      position: fixed;
+      top: 20px;
+      padding: 6px 12px;
+      background: #111;
+      border: 2px solid #ff4fd8;
+      border-radius: 8px;
+      color: #ff4fd8;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      box-shadow: 0 0 10px #ff4fd8;
+      z-index: 998;
+      white-space: nowrap;
+    }
+
+    .mobile-box {
+      left: 20px;
+    }
+
+    .desktop-box {
+      right: 20px;
+    }
+
+    .info-box:hover {
+      color: #fff;
+      border-color: #fff;
+      box-shadow: 0 0 12px #fff;
+    }
+
     /* Mobile adjustments */
     @media (max-width: 600px) {
       .terminal-header { font-size: 0.9rem; padding: 4px 8px; }
@@ -111,6 +140,9 @@
   </style>
 </head>
 <body>
+  <div class="info-box mobile-box">📱 Mobile Friendly</div>
+  <div class="info-box desktop-box">💻 Desktop Friendly</div>
+
   <div class="terminal">
     <div class="terminal-header">
       <span class="terminal-title">gooner.terminal</span>
@@ -160,7 +192,8 @@
       "pwease check my activity to watch me create liveee and visit my gallery and save to goon wif me laterrr~ UwU"
     ];
 
-    const asciiBoxLines = [
+    // Desktop ASCII logo
+    const asciiBoxDesktop = [
       '##############################################################',
       '#                                                            #',
       '#    ____   ___    ___   _   _   _____   _____   _  __       #',
@@ -174,9 +207,23 @@
       '##############################################################'
     ];
 
+    // Mobile-friendly ASCII logo
+    const asciiBoxMobile = [
+      '########################',
+      '#                      #',
+      '#       GOONTEK        #',
+      '#                      #',
+      '########################'
+    ];
+
+    // Choose logo based on screen width
+    const asciiBoxLines = window.innerWidth <= 600 ? asciiBoxMobile : asciiBoxDesktop;
+
     const lastLine = "pwease help me goon forevaaa and keep my art aliveee~ UwU.";
 
     const sequence = [...bootLines, ...bunnyLines, ...manifestoLines];
+
+    // Add ASCII logo to sequence
     asciiBoxLines.forEach(line => {
       const div = document.createElement("div");
       if (/____|\/ ___\||\| \|  _|\| |_| |\|\\____\|/.test(line)) {

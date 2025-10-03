@@ -197,6 +197,7 @@ body {
     align-items: flex-start;
     gap: 6px;
   }
+  .bunny { font-size: 12px; padding: 5px 6px; bottom: 10px; right: 10px; }
 }
   </style>
 </head>
@@ -224,7 +225,7 @@ body {
   </div>
 
   <!-- Floating Bunny -->
-  <div class="bunny">
+  <div class="bunny" id="bunnyBox">
        (｡♥‿♥｡) 
        /( .Y. )\ ~ goonmaxing
          |   |   
@@ -243,7 +244,6 @@ body {
       items.forEach(a => {
         const item = document.createElement("div");
         item.className = "gallery-item";
-        // Use server-provided src (absolute path like /assets/...)
         const ts = new Date(a.ts || Date.now());
         const human = ts.toLocaleString();
         item.innerHTML = `
@@ -270,7 +270,7 @@ body {
       }
     }
 
-    // Reset gallery via server reset endpoint (protected)
+    // Reset gallery via server reset endpoint
     async function resetGallery() {
       const key = prompt("Enter dev secret to reset gallery and session:");
       if (!key) return;
@@ -292,11 +292,46 @@ body {
       }
     }
 
-    // Poll for updates every 8 seconds so viewers see new revealed artworks quickly
     window.addEventListener("load", () => {
       fetchGallery();
       setInterval(fetchGallery, 8000);
     });
+
+   // Floating bunny cycling
+const bunnyFaces = [
+  `(｡♥‿♥｡)
+ /( .Y. )\\ 
+   |   |
+ ~ goonmaxing`,
+
+   `(≧◡≦)
+ /( UwU )\\ 
+   |   |
+ ~ pwease`,
+
+   `(◕‿◕)
+ /( .O. )\\ 
+   |   |
+ ~ horny`,
+
+  `(✿◠‿◠)
+ /( >.< )\\ 
+   |   | 
+ ~ edging`,
+
+   `(¬‿¬)
+ /( .3. )\\ 
+   |   | 
+ ~ mogging`
+];
+
+
+    let faceIndex = 0;
+    const bunnyBox = document.getElementById('bunnyBox');
+    setInterval(() => {
+      faceIndex = (faceIndex + 1) % bunnyFaces.length;
+      bunnyBox.textContent = bunnyFaces[faceIndex];
+    }, 4000);
   </script>
 </body>
 </html>

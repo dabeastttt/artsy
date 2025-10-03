@@ -20,8 +20,14 @@ const durationMs = (2 * 60 + 50) * 1000; // 2 minutes 50 seconds per artwork
 
 const artworks = [
   "3d red goon.png",
+  "90's side boob.png",
+  "after hour sneak.png",
+  "angelic desire.png",
+  "armpits galore.png",
   "attraction furry.png",
   "bikini pony.png",
+  "bursting pred.png",
+  "busty bikini bottom.png",
   "cheerleading catgirl.png",
   "chinese widow.png",
   "chubby waifui.png",
@@ -29,12 +35,18 @@ const artworks = [
   "dinking nude.png",
   "dreamy blue.png",
   "gel lucky sniff.png",
+  "grand niiiichan.png",
   "horny demon.png",
+  "lewd nurse chan.png",
   "loli curvry furry.png",
   "married to the game.png",
+  "muscle mommy.png",
+  "nervous void chan.png",
+  "realistic lucid dream.png",
   "sea she shell egg.png",
   "strawberry cowgirl.png",
-  "tentical overloadmax.png"
+  "tentical overloadmax.png",
+  "thick shake pilot.png"
 ];
 
 // Simple message store (keeps recent messages)

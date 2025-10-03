@@ -123,6 +123,13 @@
       right: 20px;
     }
 
+    /* NEW: Center X link */
+    .x-box {
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: pointer;
+    }
+
     .info-box:hover {
       color: #fff;
       border-color: #fff;
@@ -141,6 +148,7 @@
 </head>
 <body>
   <div class="info-box mobile-box">📱 Mobile Friendly</div>
+  <div class="info-box x-box" onclick="window.open('https://x.com/goonerterminal','_blank')">Follow on X</div>
   <div class="info-box desktop-box">💻 Desktop Friendly</div>
 
   <div class="terminal">
